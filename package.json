@@ -1,8 +1,8 @@
 {
-  "name": "docs",
-  "version": "0.1.0",
+  "name": "event-attendance-tracker",
+  "version": "0.0.1",
   "private": true,
-  "homepage": "http://temportalflux.github.io/QA-Recorder",
+  "homepage": "http://temportalflux.github.io/EventAttendanceTracker",
   "scripts": {
     "build": "react-scripts build",
     "start": "react-scripts start",
