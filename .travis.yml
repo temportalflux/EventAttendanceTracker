@@ -19,7 +19,5 @@ jobs:
   include:
   - stage: deploy
     name: "Deploy to gh-pages"
-    before_install:
-    - cd docs
     script:
     - npm run deploy
