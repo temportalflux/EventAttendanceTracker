@@ -1,13 +1,22 @@
 import React from 'react';
 import Base from '../Base';
-import PropTypes from "prop-types";
+import {Segment} from "semantic-ui-react";
 
 export default class Confirmation extends React.Component {
     
     render() {
         return (
-            <Base nextText='Reset Form' reset={this.props.reset}>
-                Confirmation
+            <Base
+                title={'Export & Send'}
+                primary={{
+                    text: 'Reset Form',
+                    handle: () => {},
+                }}
+            >
+                <Segment>
+                    Confirmation
+                </Segment>
+
             </Base>
         );
     }
@@ -15,5 +24,4 @@ export default class Confirmation extends React.Component {
 }
 
 Confirmation.propTypes = {
-    reset: PropTypes.func.isRequired,
 };

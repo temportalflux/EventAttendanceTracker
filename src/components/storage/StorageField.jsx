@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {SESSION_VARS} from "../../StorageVars";
+import {STORAGE_VARS} from "../../StorageVars";
 import * as lodash from "lodash";
 import * as shortid from "shortid";
 
@@ -9,6 +9,9 @@ export class StorageField extends React.Component {
     constructor(props) {
         super(props);
 
+        this.getPathKey = this.getPathKey.bind(this);
+        this.getVariable = this.getVariable.bind(this);
+        this.getRoot = this.getRoot.bind(this);
         this.get = this.get.bind(this);
         this.set = this.set.bind(this);
         this.handleChangeVar = this.handleChangeVar.bind(this);
@@ -20,43 +23,78 @@ export class StorageField extends React.Component {
 
     }
 
+    getPathKey() {
+        return lodash.toPath(this.props.sessionKey);
+    }
+
+    getVariable(pathKey) {
+        if (!pathKey) pathKey = this.getPathKey();
+        return STORAGE_VARS[pathKey.shift()];
+    }
+
+    getName() {
+        return this.props.sessionKey;
+    }
+
     componentDidMount() {
         this.handle = shortid.generate();
-        SESSION_VARS[this.props.sessionKey].subscribe(this.handle, this.handleChangeVar);
+        this.getVariable().subscribe(this.handle, this.handleChangeVar);
     }
 
     componentWillUnmount() {
-        SESSION_VARS[this.props.sessionKey].unsubscribe(this.handle);
+        this.getVariable().unsubscribe(this.handle);
         delete this.handle;
     }
 
+    getRoot(pathKey) {
+        if (!pathKey) pathKey = this.getPathKey();
+        return this.getVariable(pathKey).get(pathKey.length > 0 ? {} : this.props.defaultSessionValue);
+    }
+
     get() {
-        return SESSION_VARS[this.props.sessionKey].get(this.props.defaultSessionValue);
+        let pathKey = this.getPathKey();
+        let value = this.getRoot(pathKey);
+        if (pathKey.length > 0) value = lodash.get(value, pathKey) || this.props.defaultSessionValue;
+        return value;
     }
 
     set(value) {
-        SESSION_VARS[this.props.sessionKey].set(value);
+        let pathKey = this.getPathKey();
+        let variable = this.getVariable(pathKey);
+        let prevMainValue = this.getRoot();
+        if (pathKey.length > 0) {
+            lodash.set(prevMainValue, pathKey, value);
+        }
+        else {
+            prevMainValue = value;
+        }
+        variable.set(prevMainValue);
     }
 
     handleChangeField(e, {name, value}) {
-        this.set(value);
+        if (!this.props.isValid || this.props.isValid(value)) {
+            this.set(value);
+        }
     }
 
     handleChangeVar(value) {
-        this.setState({ value: value || this.props.defaultSessionValue });
+        let pathKey = this.getPathKey();
+        pathKey.shift();
+        if (pathKey.length > 0) value = lodash.get(value || {}, pathKey, undefined);
+        value = value || this.props.defaultSessionValue;
+        this.setState({ value: value });
+        if (this.props.onChange) {
+            this.props.onChange(value);
+        }
     }
 
     render() {
-        let props = lodash.omit(this.props, [
-            'sessionKey',
-            'defaultSessionValue',
-            'component',
-        ]);
+        let props = lodash.omit(this.props, lodash.keys(StorageField.propTypes));
         return React.createElement(
             this.props.component,
             {
                 ...props,
-                name: this.props.sessionKey,
+                name: this.getName(),
                 value: this.state.value,
                 onChange: this.handleChangeField,
             },
@@ -67,10 +105,12 @@ export class StorageField extends React.Component {
 
 StorageField.defaultProps = {
     defaultSessionValue: undefined,
+    isValid: (value) => true,
 };
 
 StorageField.propTypes = {
     component: PropTypes.any.isRequired,
     sessionKey: PropTypes.string.isRequired,
     defaultSessionValue: PropTypes.any,
+    isValid: PropTypes.func,
 };

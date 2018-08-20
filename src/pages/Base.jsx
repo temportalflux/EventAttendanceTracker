@@ -1,37 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Form, Button, Container, Menu, Dropdown} from 'semantic-ui-react';
+import {Button} from 'semantic-ui-react';
 
 export default class Base extends React.Component {
     
     render() {
         return (
-            <Container>
-
-                <Menu attached='top'>
-
-                    <Menu.Menu position='right'>
-                        <Dropdown item simple icon='info' direction='right'>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={this.props.reset}>Reset</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </Menu.Menu>
-
-                </Menu>
-
-                <Form id={'page'}>
-                    {this.props.children}
-                    <Button>{this.props.nextText}</Button>
-                </Form>
-
-            </Container>
+            <div id={'page'}>
+                {this.props.children}
+                <Button primary floated='right' onClick={this.props.primary.handle}>{this.props.primary.text}</Button>
+                { this.props.secondary && <Button secondary floated='left' onClick={this.props.secondary.handle}>{this.props.secondary.text}</Button> }
+            </div>
         );
     }
     
 }
 
+let buttonProps = PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    handle: PropTypes.func.isRequired,
+});
+
 Base.propTypes = {
-    nextText: PropTypes.string.isRequired,
-    reset: PropTypes.func.isRequired,
+    primary: buttonProps.isRequired,
+    secondary: buttonProps,
 };

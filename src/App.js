@@ -1,20 +1,14 @@
 import React from 'react';
-import Pages from './pages';
-import * as lodash from 'lodash';
-import {ClearStorage, LoadStorageVariables} from "./StorageVars";
-
-const VISUAL_STATE_DETAILS = {
-  EVENT_INFO: (props) => <Pages.EventInfo {...props} />,
-  ATTENDANCE: (props) => <Pages.Attendance {...props} />,
-  CONFIRMATION: (props) => <Pages.Confirmation {...props} />,
-};
-const VISUAL_STATES = lodash.mapValues(VISUAL_STATE_DETAILS, (value, key) => key);
+import {ClearStorage, LoadStorageVariables, STORAGE_VARS} from "./StorageVars";
+import {Button, Container, Form, Header} from "semantic-ui-react";
+import {VISUAL_STATE_DETAILS, VISUAL_STATES} from "./States";
 
 export default class App extends React.Component {
 
     constructor(props) {
         super(props);
 
+        this.handleVisualStateChange = this.handleVisualStateChange.bind(this);
         this.reset = this.reset.bind(this);
 
         this.state = {
@@ -22,6 +16,18 @@ export default class App extends React.Component {
         };
 
         LoadStorageVariables();
+    }
+
+    componentDidMount() {
+        STORAGE_VARS.STATE.subscribe('app', this.handleVisualStateChange);
+    }
+
+    componentWillUnmount() {
+        STORAGE_VARS.STATE.unsubscribe('app');
+    }
+
+    handleVisualStateChange(visualState) {
+        this.setState({ visualState: visualState });
     }
 
     reset() {
@@ -32,9 +38,23 @@ export default class App extends React.Component {
     }
 
     render() {
-        return VISUAL_STATE_DETAILS[this.state.visualState]({
-            reset: this.reset,
-        });
+        return (
+            <Form>
+
+                <Container>
+
+                    <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>
+
+                    <Header textAlign={'center'}>
+                        {VISUAL_STATE_DETAILS[this.state.visualState].title}
+                    </Header>
+
+                    {VISUAL_STATE_DETAILS[this.state.visualState].render()}
+
+                </Container>
+
+            </Form>
+        );
     }
 
 }

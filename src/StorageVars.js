@@ -1,7 +1,12 @@
 import * as lodash from "lodash";
 import StorageVariable from "./StorageVariable";
+import {VISUAL_STATES} from "./States";
 
-export let SESSION_VARS = {
+export let STORAGE_VARS = {
+    STATE: {
+        useSession: true,
+        initialValue: VISUAL_STATES.EVENT_INFO,
+    },
     EVENT_NAME: {
         useSession: true,
     },
@@ -24,19 +29,30 @@ template
 
 thank you for your time`,
     },
-
+    ATTENDANCE: {
+        useSession: true,
+        initialValue: [],
+    },
+    ATTENDEE: {
+        useSession: true,
+        initialValue: {
+            name: '',
+            id: '',
+            email: '',
+        },
+    },
 };
 
-export let SESSION_KEYS = lodash.mapValues(SESSION_VARS, (value, key) => key);
+export let STORAGE_KEYS = lodash.mapValues(STORAGE_VARS, (value, key) => key);
 
 export function LoadStorageVariables() {
-    SESSION_VARS = lodash.mapValues(SESSION_VARS, (value, key) => {
+    STORAGE_VARS = lodash.mapValues(STORAGE_VARS, (value, key) => {
         return new StorageVariable(key, value);
     });
 }
 
 export function ClearStorage() {
-    lodash.values(SESSION_VARS).forEach((variable) => {
+    lodash.values(STORAGE_VARS).forEach((variable) => {
         variable.clear();
     });
 }
