@@ -7,7 +7,6 @@ export default class Confirmation extends React.Component {
     render() {
         return (
             <Base
-                title={'Export & Send'}
                 primary={{
                     text: 'Reset Form',
                     handle: () => {},

@@ -1,7 +1,10 @@
 import React from 'react';
-import {ClearStorage, LoadStorageVariables, STORAGE_VARS} from "./StorageVars";
+import {ClearStorage, LoadStorageVariables, STORAGE_KEYS, STORAGE_VARS} from "./StorageVars";
 import {Button, Container, Form, Header} from "semantic-ui-react";
 import {VISUAL_STATE_DETAILS, VISUAL_STATES} from "./States";
+import {Route, Redirect} from "react-router-dom";
+import * as lodash from "lodash";
+import queryString from 'query-string';
 
 export default class App extends React.Component {
 
@@ -10,6 +13,7 @@ export default class App extends React.Component {
 
         this.handleVisualStateChange = this.handleVisualStateChange.bind(this);
         this.reset = this.reset.bind(this);
+        this.renderApp = this.renderApp.bind(this);
 
         this.state = {
             visualState: VISUAL_STATES.EVENT_INFO,
@@ -38,6 +42,24 @@ export default class App extends React.Component {
     }
 
     render() {
+        return (
+            <Route path={'/'} render={this.renderApp}/>
+        );
+    }
+
+    renderApp({location}) {
+        const queries = queryString.parse(location.search);
+
+        if (Object.keys(queries).length > 0) {
+            let storageKeys = lodash.values(STORAGE_KEYS);
+            lodash.forIn(queries, (value, key) => {
+                if (storageKeys.includes(key)) {
+                    STORAGE_VARS[key].set(JSON.parse(value));
+                }
+            });
+            return <Redirect to={'/'} />;
+        }
+
         return (
             <Form>
 

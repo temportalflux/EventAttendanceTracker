@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {STORAGE_VARS} from "../../StorageVars";
 import * as lodash from "lodash";
 import * as shortid from "shortid";
+import {Form, Label} from "semantic-ui-react";
 
 export class StorageField extends React.Component {
 
@@ -16,9 +17,12 @@ export class StorageField extends React.Component {
         this.set = this.set.bind(this);
         this.handleChangeVar = this.handleChangeVar.bind(this);
         this.handleChangeField = this.handleChangeField.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.checkErrors = this.checkErrors.bind(this);
 
         this.state = {
             value: this.get(),
+            errors: this.props.errors,
         };
 
     }
@@ -82,22 +86,46 @@ export class StorageField extends React.Component {
         pathKey.shift();
         if (pathKey.length > 0) value = lodash.get(value || {}, pathKey, undefined);
         value = value || this.props.defaultSessionValue;
-        this.setState({ value: value });
+        this.setState({value: value});
         if (this.props.onChange) {
             this.props.onChange(value);
+        }
+        this.checkErrors();
+    }
+
+    handleBlur() {
+        this.checkErrors();
+    }
+
+    checkErrors() {
+        let errors = this.props.getErrors ? this.props.getErrors(this.state.value, this.props.required) : [];
+        if (errors) {
+            this.setState({
+                errors: errors,
+            });
         }
     }
 
     render() {
         let props = lodash.omit(this.props, lodash.keys(StorageField.propTypes));
-        return React.createElement(
+        let component = React.createElement(
             this.props.component,
             {
                 ...props,
                 name: this.getName(),
                 value: this.state.value,
                 onChange: this.handleChangeField,
+                onBlur: this.handleBlur,
             },
+        );
+        return (
+            <Form.Field required={this.props.required} error={this.state.errors.length > 0}>
+                <label>{this.props.fieldLabel}</label>
+                {component}
+                {this.state.errors && this.state.errors.map((errorMessage) => (
+                    <Label key={shortid.generate()} pointing color='red'>{errorMessage}</Label>
+                ))}
+            </Form.Field>
         );
     }
 
@@ -105,12 +133,19 @@ export class StorageField extends React.Component {
 
 StorageField.defaultProps = {
     defaultSessionValue: undefined,
+    required: false,
     isValid: (value) => true,
+    getErrors: (value) => [],
+    errors: [],
 };
 
 StorageField.propTypes = {
+    fieldLabel: PropTypes.string.isRequired,
     component: PropTypes.any.isRequired,
     sessionKey: PropTypes.string.isRequired,
     defaultSessionValue: PropTypes.any,
+    required: PropTypes.bool,
     isValid: PropTypes.func,
+    getErrors: PropTypes.func,
+    errors: PropTypes.arrayOf(PropTypes.string),
 };

@@ -19,7 +19,7 @@ export let STORAGE_VARS = {
     LOCATION: {
         useSession: true,
     },
-    EMAIL_TEMPLATE: {
+    ATTENDEE_EMAIL_TEMPLATE: {
         useSession: true,
         initialValue:
 `This is
@@ -40,6 +40,20 @@ thank you for your time`,
             id: '',
             email: '',
         },
+    },
+    ATTENDANCE_RECIPIENT: {
+        useSession: true,
+        initialValue: 'jared.cadrette',
+    },
+    ATTENDANCE_EMAIL_TEMPLATE: {
+        useSession: true,
+        initialValue:
+`This is
+an
+email
+template
+
+thank you for your time`,
     },
 };
 

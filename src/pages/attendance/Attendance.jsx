@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Form, Input, Segment} from "semantic-ui-react";
+import {Input, Segment} from "semantic-ui-react";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
 import {StorageField} from "../../components/storage/StorageField";
 
@@ -34,7 +34,6 @@ export default class Attendance extends React.Component {
     render() {
         return (
             <Base
-                title={'Add attendance'}
                 primary={{
                     text: 'Submit New Attendee',
                     handle: this.submitAttendee,
@@ -42,37 +41,34 @@ export default class Attendance extends React.Component {
             >
                 <Segment>
 
-                    <Form.Field required>
-                        <label>Name</label>
-                        <StorageField
-                            component={Input}
-                            sessionKey={`${STORAGE_KEYS.ATTENDEE}.name`}
-                            defaultSessionValue={''}
-                        />
-                    </Form.Field>
+                    <StorageField
+                        required
+                        fieldLabel={'Name'}
+                        component={Input}
+                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.name`}
+                        defaultSessionValue={''}
+                    />
 
-                    <Form.Field required>
-                        <label>Student ID</label>
-                        <StorageField
-                            component={Input}
-                            sessionKey={`${STORAGE_KEYS.ATTENDEE}.id`}
-                            defaultSessionValue={''}
-                            label={'82-'}
-                            isValid={this.isInputValidID}
-                        />
-                    </Form.Field>
+                    <StorageField
+                        required
+                        fieldLabel={'Student ID'}
+                        component={Input}
+                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.id`}
+                        defaultSessionValue={''}
+                        label={'82-'}
+                        isValid={this.isInputValidID}
+                    />
 
-                    <Form.Field required>
-                        <label>Email</label>
-                        <StorageField
-                            component={Input}
-                            sessionKey={`${STORAGE_KEYS.ATTENDEE}.email`}
-                            defaultSessionValue={''}
-                            label={'mymail.champlain.edu'}
-                            labelPosition='right'
-                            isValid={this.isInputValidEmailPreface}
-                        />
-                    </Form.Field>
+                    <StorageField
+                        required
+                        fieldLabel={'Email'}
+                        component={Input}
+                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.email`}
+                        defaultSessionValue={''}
+                        label={'mymail.champlain.edu'}
+                        labelPosition='right'
+                        isValid={this.isInputValidEmailPreface}
+                    />
 
                 </Segment>
             </Base>

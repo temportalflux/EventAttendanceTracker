@@ -8,6 +8,7 @@ export default class StorageVariable {
         this.initialValue = initialValue;
         this.listeners = {};
 
+        this.init = this.init.bind(this);
         this.getStorage = this.getStorage.bind(this);
         this.get = this.get.bind(this);
         this.set = this.set.bind(this);
@@ -16,6 +17,10 @@ export default class StorageVariable {
         this.unsubscribe = this.unsubscribe.bind(this);
         this.dispatch = this.dispatch.bind(this);
 
+        this.init();
+    }
+
+    init() {
         if (this.initialValue && this.get(undefined) === undefined) {
             this.set(this.initialValue);
         }
@@ -40,6 +45,7 @@ export default class StorageVariable {
 
     clear() {
         this.getStorage().removeItem(this.key);
+        this.init();
         this.dispatch(this.initialValue);
     }
 
