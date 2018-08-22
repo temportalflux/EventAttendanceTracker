@@ -21,7 +21,7 @@
     "react-static": "^5.9.7",
     "semantic-ui-react": "^0.82.2",
     "shortid": "^2.2.13",
-    "query-string": "latest"
+    "query-string": "~5.1.1"
   },
   "devDependencies": {
     "gh-pages": "^1.2.0",

@@ -3,10 +3,10 @@ import Base from '../Base';
 import {Header, Input, Segment, TextArea} from "semantic-ui-react";
 import {DropdownStateful} from "../../components/DropdownStateful";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
-import {StorageField} from "../../components/storage/StorageField";
-import * as lodash from "lodash";
 import * as shortid from "shortid";
 import {VISUAL_STATES} from "../../States";
+import {listify} from "../../util/ReactUtil";
+import {StorageFieldBuilder} from "../../components/storage/StorageFieldBuilder";
 
 export default class EventInfo extends React.Component {
 
@@ -14,83 +14,108 @@ export default class EventInfo extends React.Component {
         return EventInfo.buildValidator(EventInfo.getErrorsForNonEmpty);
     }
 
-    static buildStorageField(key, props) {
-        return lodash.defaultsDeep(lodash.omit(props, 'validator'), {
-            sessionKey: key,
-            errors: [],
-            getErrors: (value) => props.validator(value || STORAGE_VARS[key].get(), props.required),
-        });
-    }
-
-    static listify(value) {
-        if (Array.isArray(value)) return value.map((item) => EventInfo.listify(item));
-        else if (typeof value === 'string') return { key: shortid.generate(), text: value, value: value };
-        else return lodash.defaults(value, { key: shortid.generate(), text: '', value: '' });
-    }
-
     constructor(props) {
         super(props);
-
-        const emptyValidator = EventInfo.buildValidatorNonEmpty();
-        const buildField = EventInfo.buildStorageField;
 
         this.state = {
             fields: {
                 event: [
-                    buildField(STORAGE_KEYS.EVENT_NAME, {
+                    {
+                        errors: [],
                         required: true,
-                        fieldLabel: 'Event Name',
-                        component: Input,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
-                    buildField(STORAGE_KEYS.EVENT_TYPE, {
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: STORAGE_KEYS.EVENT_NAME,
+                            component: Input,
+                            fieldLabel: 'Event Name',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
                         required: true,
-                        fieldLabel: 'Event Type',
-                        component: Input,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
-                    buildField(STORAGE_KEYS.RA, {
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: STORAGE_KEYS.EVENT_TYPE,
+                            component: Input,
+                            fieldLabel: 'Event Type',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
                         required: true,
-                        fieldLabel: 'Resident Assistant(s)',
-                        component: DropdownStateful,
-                        defaultSessionValue: [],
-                        validator: EventInfo.buildValidator(EventInfo.getErrorsForNonEmpty),
-                        options: EventInfo.listify(STORAGE_VARS.RA.get([])),
-                    }),
-                    buildField(STORAGE_KEYS.LOCATION, {
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: STORAGE_KEYS.RA,
+                            component: DropdownStateful,
+                            fieldLabel: 'Resident Assistant(s)',
+                            defaultSessionValue: [],
+                            options: listify(STORAGE_VARS.RA.get([])),
+                        },
+                    },
+                    {
                         required: true,
-                        fieldLabel: 'Location (Hall)',
-                        component: Input,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: STORAGE_KEYS.LOCATION,
+                            component: Input,
+                            fieldLabel: 'Location (Hall)',
+                            defaultSessionValue: '',
+                        },
+                    },
                 ],
                 attendance: [
-                    buildField(STORAGE_KEYS.ATTENDANCE_RECIPIENT, {
+                    {
                         required: true,
-                        fieldLabel: 'Recipient',
-                        component: Input,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
-                    buildField(STORAGE_KEYS.ATTENDANCE_EMAIL_TEMPLATE, {
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.recipient`,
+                            component: Input,
+                            fieldLabel: 'Recipient',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
                         required: true,
-                        fieldLabel: 'Email Template',
-                        component: TextArea,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.subject`,
+                            component: Input,
+                            fieldLabel: 'Subject',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
+                        required: true,
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.body`,
+                            component: TextArea,
+                            fieldLabel: 'Email Template',
+                            defaultSessionValue: '',
+                        },
+                    },
                 ],
                 attendee: [
-                    buildField(STORAGE_KEYS.ATTENDEE_EMAIL_TEMPLATE, {
+                    {
                         required: true,
-                        fieldLabel: 'Email Template',
-                        component: TextArea,
-                        defaultSessionValue: '',
-                        validator: emptyValidator,
-                    }),
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDEE_EMAIL}.subject`,
+                            component: Input,
+                            fieldLabel: 'Subject',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
+                        required: true,
+                        validator: EventInfo.buildValidatorNonEmpty(),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDEE_EMAIL}.body`,
+                            component: TextArea,
+                            fieldLabel: 'Email Template',
+                            defaultSessionValue: '',
+                        },
+                    },
                 ],
             },
         };
@@ -123,7 +148,7 @@ export default class EventInfo extends React.Component {
                         let hasErrors = false;
                         Object.keys(fields).forEach((sectionKey) => {
                             fields[sectionKey].forEach((field) => {
-                                field.errors = field.getErrors();
+                                field.errors = field.validator(StorageFieldBuilder.getValue(field.info.sessionKey), field.required);
                                 hasErrors = hasErrors || field.errors.length > 0;
                             });
                         });
@@ -137,7 +162,7 @@ export default class EventInfo extends React.Component {
                 <Segment color='blue'>
 
                     {this.state.fields.event.map((field) => (
-                        <StorageField
+                        <StorageFieldBuilder
                             key={shortid.generate()}
                             {...field}
                         />
@@ -149,7 +174,7 @@ export default class EventInfo extends React.Component {
                 <Segment>
 
                     {this.state.fields.attendance.map((field) => (
-                        <StorageField
+                        <StorageFieldBuilder
                             key={shortid.generate()}
                             {...field}
                         />
@@ -161,7 +186,7 @@ export default class EventInfo extends React.Component {
                 <Segment>
 
                     {this.state.fields.attendee.map((field) => (
-                        <StorageField
+                        <StorageFieldBuilder
                             key={shortid.generate()}
                             {...field}
                         />

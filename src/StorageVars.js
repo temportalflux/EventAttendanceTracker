@@ -19,19 +19,23 @@ export let STORAGE_VARS = {
     LOCATION: {
         useSession: true,
     },
-    ATTENDEE_EMAIL_TEMPLATE: {
+    ATTENDANCE: {
         useSession: true,
-        initialValue:
+        initialValue: [],
+    },
+    ATTENDANCE_EMAIL: {
+        useSession: true,
+        initialValue: {
+            recipient: 'jcadrette',
+            subject: 'Email subject here',
+            body:
 `This is
 an
 email
 template
 
 thank you for your time`,
-    },
-    ATTENDANCE: {
-        useSession: true,
-        initialValue: [],
+        },
     },
     ATTENDEE: {
         useSession: true,
@@ -41,19 +45,18 @@ thank you for your time`,
             email: '',
         },
     },
-    ATTENDANCE_RECIPIENT: {
+    ATTENDEE_EMAIL: {
         useSession: true,
-        initialValue: 'jared.cadrette',
-    },
-    ATTENDANCE_EMAIL_TEMPLATE: {
-        useSession: true,
-        initialValue:
+        initialValue: {
+            subject: 'Email template',
+            body:
 `This is
 an
 email
 template
 
 thank you for your time`,
+        },
     },
 };
 
