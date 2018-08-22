@@ -1,26 +1,78 @@
 import React from 'react';
 import Base from '../Base';
-import {Input, Segment} from "semantic-ui-react";
+import {Button, Input} from "semantic-ui-react";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
-import {StorageField} from "../../components/storage/StorageField";
+import {VISUAL_STATES} from "../../States";
+import EventInfo from "../eventInfo/EventInfo";
+import {StorageFieldSection} from "../../components/storage/StorageFieldSection";
+import StorageFieldSectionData from "../../components/storage/StorageFieldSectionData";
+import StorageFieldData from "../../components/storage/StorageFieldData";
 
 export default class Attendance extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.isInputValidID = this.isInputValidID.bind(this);
-        this.isInputValidEmailPreface = this.isInputValidEmailPreface.bind(this);
+        this.validateAndSubmit = this.validateAndSubmit.bind(this);
         this.submitAttendee = this.submitAttendee.bind(this);
 
+        this.state = {
+            section:  new StorageFieldSectionData({
+                fields: [
+                    {
+                        required: true,
+                        validator: EventInfo.buildValidator(EventInfo.getErrorsForNonEmpty),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.name`,
+                            component: Input,
+                            fieldLabel: 'Name',
+                            defaultSessionValue: '',
+                        },
+                    },
+                    {
+                        required: true,
+                        validator: EventInfo.buildValidator(Attendance.isInputValidID),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.id`,
+                            component: Input,
+                            fieldLabel: 'Student ID',
+                            defaultSessionValue: '',
+                            label: '82-',
+                        },
+                    },
+                    {
+                        required: true,
+                        validator: EventInfo.buildValidator(Attendance.isInputValidEmailPreface),
+                        info: {
+                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.email`,
+                            component: Input,
+                            fieldLabel: 'Email',
+                            defaultSessionValue: '',
+                            label: '@mymail.champlain.edu',
+                            labelPosition: 'right',
+                        },
+                    },
+                ].map((props) => new StorageFieldData(props)),
+            }),
+        };
+
     }
 
-    isInputValidID(value) {
-        return value.match(/^[0-9]{0,7}$/i);
+    validateAndSubmit() {
+
+        this.submitAttendee();
     }
 
-    isInputValidEmailPreface(value) {
-        return !value.includes('@');
+    static isInputValidID(value, required) {
+        let errors = [];
+        if (required && (!value || value.match(/^[0-9]{0,7}$/i))) errors.push('Field must be 0-7 numbers');
+        return errors;
+    }
+
+    static isInputValidEmailPreface(value, required) {
+        let errors = [];
+        if (required && (!value || !value.includes('@'))) errors.push('Must be a valid email.');
+        return errors;
     }
 
     submitAttendee() {
@@ -36,41 +88,19 @@ export default class Attendance extends React.Component {
             <Base
                 primary={{
                     text: 'Submit New Attendee',
-                    handle: this.submitAttendee,
+                    handle: this.validateAndSubmit,
                 }}
             >
-                <Segment>
+                <StorageFieldSection
+                    sectionData={this.state.section}
+                    sectionDepth={0}
+                    validateEventKey={''}
+                />
 
-                    <StorageField
-                        required
-                        fieldLabel={'Name'}
-                        component={Input}
-                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.name`}
-                        defaultSessionValue={''}
-                    />
+                <Button color={'black'} onClick={() => {
+                    STORAGE_VARS.STATE.set(VISUAL_STATES.CONFIRMATION);
+                }}>Finish</Button>
 
-                    <StorageField
-                        required
-                        fieldLabel={'Student ID'}
-                        component={Input}
-                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.id`}
-                        defaultSessionValue={''}
-                        label={'82-'}
-                        isValid={this.isInputValidID}
-                    />
-
-                    <StorageField
-                        required
-                        fieldLabel={'Email'}
-                        component={Input}
-                        sessionKey={`${STORAGE_KEYS.ATTENDEE}.email`}
-                        defaultSessionValue={''}
-                        label={'mymail.champlain.edu'}
-                        labelPosition='right'
-                        isValid={this.isInputValidEmailPreface}
-                    />
-
-                </Segment>
             </Base>
         );
     }

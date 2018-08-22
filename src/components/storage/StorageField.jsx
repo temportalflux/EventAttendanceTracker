@@ -4,6 +4,7 @@ import {STORAGE_VARS} from "../../StorageVars";
 import * as lodash from "lodash";
 import * as shortid from "shortid";
 import {Form, Label} from "semantic-ui-react";
+import StorageFieldData from "./StorageFieldData";
 
 export class StorageField extends React.Component {
 
@@ -19,10 +20,11 @@ export class StorageField extends React.Component {
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.checkErrors = this.checkErrors.bind(this);
+        this.handleChangeErrors = this.handleChangeErrors.bind(this);
 
         this.state = {
             value: this.get(),
-            errors: this.props.errors,
+            errors: this.props.errors || [],
         };
 
     }
@@ -43,10 +45,12 @@ export class StorageField extends React.Component {
     componentDidMount() {
         this.handle = shortid.generate();
         this.getVariable().subscribe(this.handle, this.handleChangeVar);
+        this.props.storageFieldData.subscribe(this.handle, this.handleChangeErrors);
     }
 
     componentWillUnmount() {
         this.getVariable().unsubscribe(this.handle);
+        this.props.storageFieldData.unsubscribe(this.handle);
         delete this.handle;
     }
 
@@ -99,11 +103,13 @@ export class StorageField extends React.Component {
 
     checkErrors() {
         let errors = this.props.getErrors ? this.props.getErrors(this.state.value, this.props.required) : [];
-        if (errors) {
-            this.setState({
-                errors: errors,
-            });
-        }
+        this.handleChangeErrors(errors);
+    }
+
+    handleChangeErrors(errors) {
+        this.setState({
+            errors: errors,
+        });
     }
 
     render() {
@@ -137,6 +143,7 @@ StorageField.defaultProps = {
     isValid: (value) => true,
     getErrors: (value) => [],
     errors: [],
+    storageFieldData: undefined,
 };
 
 StorageField.propTypes = {
@@ -148,4 +155,5 @@ StorageField.propTypes = {
     isValid: PropTypes.func,
     getErrors: PropTypes.func,
     errors: PropTypes.arrayOf(PropTypes.string),
+    storageFieldData: PropTypes.instanceOf(StorageFieldData),
 };
