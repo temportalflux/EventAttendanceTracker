@@ -3,13 +3,12 @@ import Base from '../Base';
 import {Dropdown, Input, TextArea} from "semantic-ui-react";
 import {DropdownStateful} from "../../components/DropdownStateful";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
-import * as shortid from "shortid";
 import {VISUAL_STATES} from "../../States";
 import {listify} from "../../util/ReactUtil";
-import {StorageFieldBuilder} from "../../components/storage/StorageFieldBuilder";
 import {StorageFieldSection} from "../../components/storage/StorageFieldSection";
 import StorageFieldData from "../../components/storage/StorageFieldData";
 import StorageFieldSectionData from "../../components/storage/StorageFieldSectionData";
+import {Email} from "../../components/Email";
 
 export default class EventInfo extends React.Component {
 
@@ -79,14 +78,12 @@ export default class EventInfo extends React.Component {
                     fields: [
                         {
                             required: true,
-                            validator: EventInfo.buildValidatorNonEmpty(),
+                            validator: EventInfo.buildValidator(EventInfo.getErrorsForEmailObj),
                             info: {
                                 sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.recipient`,
-                                component: Input,
+                                component: Email,
                                 fieldLabel: 'Recipient',
                                 defaultSessionValue: '',
-                                label: '@mymail.champlain.edu',
-                                labelPosition: 'right',
                             },
                         },
                         {
@@ -140,27 +137,22 @@ export default class EventInfo extends React.Component {
         };
     }
 
-    static makeEmailDropdownStorageField() {
-        return (
-            <StorageFieldBuilder
-                key={shortid.generate()}
-                info={{
-                    sessionKey: `${STORAGE_KEYS.ATTENDEE_EMAIL}.body`,
-                    component: Dropdown,
-                    defaultSessionValue: '@mymail.champlain.edu',
-                    defaultValue: '@mymail.champlain.edu',
-                    options: listify([
-                        '@mymail.champlain.edu',
-                        '@champlain.edu',
-                    ]),
-                }}
-            />
-        );
-    }
-
     static getErrorsForNonEmpty(value, required) {
         let errors = [];
-        if (required && (!value || value.length <= 0)) errors.push('Field cannot be empty.');
+        if (required) {
+            if (!value || value.length <= 0) {
+                errors.push('Field cannot be empty.');
+            }
+        }
+        return errors;
+    }
+
+    static getErrorsForEmailObj(value, required, isBlur) {
+        let errors = [];
+        if (required) {
+            errors = errors.concat(EventInfo.getErrorsForNonEmpty(value.user, required, isBlur).map((error) => `User: ${error}`));
+            errors = errors.concat(EventInfo.getErrorsForNonEmpty(value.host, required, isBlur).map((error) => `Host: ${error}`));
+        }
         return errors;
     }
 

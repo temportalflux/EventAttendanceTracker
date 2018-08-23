@@ -3,10 +3,6 @@ import {STORAGE_VARS} from "../../StorageVars";
 
 export default class StorageFieldData {
 
-    static getErrors(validator, value, required) {
-        return validator(value, required);
-    }
-
     static getValue(sessionKey) {
         let keyPath = lodash.toPath(sessionKey);
         let value = STORAGE_VARS[keyPath.shift()].get();
@@ -26,12 +22,12 @@ export default class StorageFieldData {
         this.listeners = {};
     }
 
-    validate(value, requiredIn) {
+    validate(value, isBlur) {
         let { validator, info, required } = this.props;
-        this.props.errors = StorageFieldData.getErrors(
-            validator,
+        this.props.errors = validator(
             value || StorageFieldData.getValue(info.sessionKey),
-            required
+            required,
+            isBlur,
         );
         this.dispatch();
         return this.props.errors;

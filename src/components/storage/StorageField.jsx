@@ -102,7 +102,7 @@ export class StorageField extends React.Component {
     }
 
     checkErrors() {
-        let errors = this.props.getErrors ? this.props.getErrors(this.state.value, this.props.required) : [];
+        let errors = this.props.getErrors ? this.props.getErrors(this.state.value) : [];
         this.handleChangeErrors(errors);
     }
 
@@ -114,16 +114,16 @@ export class StorageField extends React.Component {
 
     render() {
         let props = lodash.omit(this.props, lodash.keys(StorageField.propTypes));
-        let component = React.createElement(
-            this.props.component,
-            {
-                ...props,
-                name: this.getName(),
-                value: this.state.value,
-                onChange: this.handleChangeField,
-                onBlur: this.handleBlur,
-            },
-        );
+        let compProps = {
+            ...props,
+            name: this.getName(),
+            value: this.state.value,
+            onChange: this.handleChangeField,
+            onBlur: this.handleBlur,
+        };
+        let component = this.props.component
+            ? React.createElement(this.props.component, compProps)
+            : this.props.render(compProps, this.handleChangeField);
         return (
             <Form.Field required={this.props.required} error={this.state.errors.length > 0}>
                 <label>{this.props.fieldLabel}</label>
@@ -138,6 +138,8 @@ export class StorageField extends React.Component {
 }
 
 StorageField.defaultProps = {
+    component: undefined,
+    render: () => <div/>,
     defaultSessionValue: undefined,
     required: false,
     isValid: (value) => true,
@@ -148,7 +150,8 @@ StorageField.defaultProps = {
 
 StorageField.propTypes = {
     fieldLabel: PropTypes.string.isRequired,
-    component: PropTypes.any.isRequired,
+    component: PropTypes.any,
+    render: PropTypes.func,
     sessionKey: PropTypes.string.isRequired,
     defaultSessionValue: PropTypes.any,
     required: PropTypes.bool,

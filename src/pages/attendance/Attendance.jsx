@@ -7,6 +7,7 @@ import EventInfo from "../eventInfo/EventInfo";
 import {StorageFieldSection} from "../../components/storage/StorageFieldSection";
 import StorageFieldSectionData from "../../components/storage/StorageFieldSectionData";
 import StorageFieldData from "../../components/storage/StorageFieldData";
+import {Email} from "../../components/Email";
 
 export default class Attendance extends React.Component {
 
@@ -23,7 +24,7 @@ export default class Attendance extends React.Component {
                         required: true,
                         validator: EventInfo.buildValidator(EventInfo.getErrorsForNonEmpty),
                         info: {
-                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.name`,
+                            sessionKey: STORAGE_KEYS.ATTENDEE_NAME,
                             component: Input,
                             fieldLabel: 'Name',
                             defaultSessionValue: '',
@@ -33,7 +34,7 @@ export default class Attendance extends React.Component {
                         required: true,
                         validator: EventInfo.buildValidator(Attendance.isInputValidID),
                         info: {
-                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.id`,
+                            sessionKey: STORAGE_KEYS.ATTENDEE_ID,
                             component: Input,
                             fieldLabel: 'Student ID',
                             defaultSessionValue: '',
@@ -42,14 +43,12 @@ export default class Attendance extends React.Component {
                     },
                     {
                         required: true,
-                        validator: EventInfo.buildValidator(Attendance.isInputValidEmailPreface),
+                        validator: EventInfo.buildValidator(EventInfo.getErrorsForEmailObj),
                         info: {
-                            sessionKey: `${STORAGE_KEYS.ATTENDEE}.email`,
-                            component: Input,
+                            sessionKey: STORAGE_KEYS.ATTENDEE_EMAIL_ADDRESS,
+                            component: Email,
                             fieldLabel: 'Email',
                             defaultSessionValue: '',
-                            label: '@mymail.champlain.edu',
-                            labelPosition: 'right',
                         },
                     },
                 ].map((props) => new StorageFieldData(props)),
@@ -65,22 +64,24 @@ export default class Attendance extends React.Component {
 
     static isInputValidID(value, required) {
         let errors = [];
-        if (required && (!value || value.match(/^[0-9]{0,7}$/i))) errors.push('Field must be 0-7 numbers');
-        return errors;
-    }
-
-    static isInputValidEmailPreface(value, required) {
-        let errors = [];
-        if (required && (!value || !value.includes('@'))) errors.push('Must be a valid email.');
+        if (required) {
+            if (!value || !value.match(/^[0-9]{0,7}$/i))
+                errors.push('Field must be 0-7 numbers');
+        }
         return errors;
     }
 
     submitAttendee() {
-        let attendee = STORAGE_VARS.ATTENDEE.get();
         let attendance = STORAGE_VARS.ATTENDANCE.get([]);
-        attendance.push(attendee);
+        attendance.push({
+            name: STORAGE_VARS.ATTENDEE_NAME.get(),
+            id: STORAGE_VARS.ATTENDEE_ID.get(),
+            email: STORAGE_VARS.ATTENDEE_EMAIL.get(),
+        });
         STORAGE_VARS.ATTENDANCE.set(attendance);
-        STORAGE_VARS.ATTENDEE.clear();
+        STORAGE_VARS.ATTENDEE_NAME.clear();
+        STORAGE_VARS.ATTENDEE_ID.clear();
+        STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear();
     }
     
     render() {

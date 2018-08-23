@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {StorageField} from "./StorageField";
 import * as shortid from "shortid";
-import {STORAGE_VARS} from "../../StorageVars";
-import * as lodash from "lodash";
 import StorageFieldData from "./StorageFieldData";
 
 export class StorageFieldBuilder extends React.Component {

@@ -26,7 +26,10 @@ export let STORAGE_VARS = {
     ATTENDANCE_EMAIL: {
         useSession: true,
         initialValue: {
-            recipient: 'jcadrette',
+            recipient: {
+                user: 'jcadrette',
+                host: '@champlain.edu',
+            },
             subject: 'Email subject here',
             body:
 `This is
@@ -37,12 +40,19 @@ template
 thank you for your time`,
         },
     },
-    ATTENDEE: {
+    ATTENDEE_NAME: {
+        useSession: true,
+        initialValue: '',
+    },
+    ATTENDEE_ID: {
+        useSession: true,
+        initialValue: '',
+    },
+    ATTENDEE_EMAIL_ADDRESS: {
         useSession: true,
         initialValue: {
-            name: '',
-            id: '',
-            email: '',
+            user: '',
+            host: '@mymail.champlain.edu',
         },
     },
     ATTENDEE_EMAIL: {
