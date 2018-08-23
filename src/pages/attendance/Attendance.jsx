@@ -76,7 +76,7 @@ export default class Attendance extends React.Component {
         attendance.push({
             name: STORAGE_VARS.ATTENDEE_NAME.get(),
             id: STORAGE_VARS.ATTENDEE_ID.get(),
-            email: STORAGE_VARS.ATTENDEE_EMAIL.get(),
+            email: STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.get(),
         });
         STORAGE_VARS.ATTENDANCE.set(attendance);
         STORAGE_VARS.ATTENDEE_NAME.clear();

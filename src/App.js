@@ -1,6 +1,6 @@
 import React from 'react';
 import {ClearStorage, LoadStorageVariables, STORAGE_KEYS, STORAGE_VARS} from "./StorageVars";
-import {Button, Container, Form, Header} from "semantic-ui-react";
+import {Button, Container, Divider, Form, Header} from "semantic-ui-react";
 import {VISUAL_STATE_DETAILS, VISUAL_STATES} from "./States";
 import {Route, Redirect} from "react-router-dom";
 import * as lodash from "lodash";
@@ -70,6 +70,8 @@ export default class App extends React.Component {
                     <Header textAlign={'center'}>
                         {VISUAL_STATE_DETAILS[this.state.visualState].title}
                     </Header>
+
+                    <Divider hidden />
 
                     {VISUAL_STATE_DETAILS[this.state.visualState].render()}
 

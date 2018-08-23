@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Dropdown, Input, TextArea} from "semantic-ui-react";
+import {Input, TextArea} from "semantic-ui-react";
 import {DropdownStateful} from "../../components/DropdownStateful";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
 import {VISUAL_STATES} from "../../States";
