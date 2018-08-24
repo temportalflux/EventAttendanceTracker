@@ -27,8 +27,8 @@ export let STORAGE_VARS = {
         useSession: true,
         initialValue: {
             recipient: {
-                user: 'jcadrette',
-                host: '@champlain.edu',
+                user: 'dustin.yost', //'jcadrette',
+                host: '@mymail.champlain.edu',
             },
             subject: 'Email subject here',
             body:
@@ -51,7 +51,7 @@ thank you for your time`,
     ATTENDEE_EMAIL_ADDRESS: {
         useSession: true,
         initialValue: {
-            user: '',
+            user: 'dustin.yost',
             host: '@mymail.champlain.edu',
         },
     },

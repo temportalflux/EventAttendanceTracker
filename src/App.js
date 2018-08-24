@@ -5,6 +5,7 @@ import {VISUAL_STATE_DETAILS, VISUAL_STATES} from "./States";
 import {Route, Redirect} from "react-router-dom";
 import * as lodash from "lodash";
 import queryString from 'query-string';
+import GoogleApi from "./GoogleApi";
 
 export default class App extends React.Component {
 
@@ -20,6 +21,8 @@ export default class App extends React.Component {
         };
 
         LoadStorageVariables();
+        this.googleApi = new GoogleApi();
+        //let promise = this.googleApi.connect();
     }
 
     componentDidMount() {
