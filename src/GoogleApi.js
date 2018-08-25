@@ -49,6 +49,8 @@ export default class GoogleApi {
     }
 
     async loadApiAsync() {
+        this.isAuthenticated = false;
+
         await this.loadScript('https://apis.google.com/js/api.js');
         await new Promise(resolve => window.gapi.load('client', resolve));
 
@@ -71,7 +73,18 @@ export default class GoogleApi {
     }
 
     static async sendEmail(receivers, cc, bcc, subject, body, attachments) {
-        await window.gapi.auth2.getAuthInstance().signIn();
+        if (!this.isAuthenticated) {
+            try {
+                let response = await window.gapi.auth2.getAuthInstance().signIn();
+                if (response) {
+                    this.isAuthenticated = true;
+                }
+            }
+            catch (err) {
+                this.isAuthenticated = false;
+                return;
+            }
+        }
 
         let boundary = shortid.generate();
         let email = [];
@@ -95,7 +108,7 @@ export default class GoogleApi {
 
         // Main email
         email.push(GoogleApi.buildHeader([
-            [ 'Content-Type', 'text/html; charset=utf-8' ],
+            [ 'Content-Type', 'text/plain; charset=utf-8' ],
             [ 'Content-Transfer-Encoding', 'quoted-printable' ],
         ]));
         email.push('');
