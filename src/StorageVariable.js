@@ -2,10 +2,11 @@ import * as lodash from "lodash";
 
 export default class StorageVariable {
 
-    constructor(sessionKey, {useSession, initialValue}) {
+    constructor(sessionKey, {useSession, initialValue, wrapper}) {
         this.key = sessionKey;
         this.useSession = useSession;
         this.initialValue = initialValue;
+        this.wrapper = wrapper;
         this.listeners = {};
 
         this.init = this.init.bind(this);
@@ -33,7 +34,10 @@ export default class StorageVariable {
     get(defaultValue) {
         let cachedHits = this.getStorage().getItem(this.key);
         if (cachedHits) cachedHits = JSON.parse(cachedHits);
-        return cachedHits || defaultValue;
+        cachedHits = cachedHits || defaultValue;
+        if (this.wrapper)
+            cachedHits = this.wrapper(cachedHits);
+        return cachedHits;
     }
 
     set(value) {

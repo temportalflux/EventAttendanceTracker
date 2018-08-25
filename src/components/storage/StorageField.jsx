@@ -17,6 +17,7 @@ export class StorageField extends React.Component {
         this.get = this.get.bind(this);
         this.set = this.set.bind(this);
         this.handleChangeVar = this.handleChangeVar.bind(this);
+        this.handleChangeFieldWrapper = this.handleChangeFieldWrapper.bind(this);
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.checkErrors = this.checkErrors.bind(this);
@@ -62,7 +63,10 @@ export class StorageField extends React.Component {
     get() {
         let pathKey = this.getPathKey();
         let value = this.getRoot(pathKey);
-        if (pathKey.length > 0) value = lodash.get(value, pathKey) || this.props.defaultSessionValue;
+        if (pathKey.length > 0) value = lodash.get(value, pathKey, this.props.defaultSessionValue);
+        value = value || this.props.defaultSessionValue;
+        if (this.props.wrapValue)
+            value = this.props.wrapValue(value);
         return value;
     }
 
@@ -79,6 +83,13 @@ export class StorageField extends React.Component {
         variable.set(prevMainValue);
     }
 
+    handleChangeFieldWrapper(...data) {
+        if (this.props.getValueOnChange)
+            this.set(this.props.getValueOnChange(...data));
+        else
+            this.handleChangeField(...data);
+    }
+
     handleChangeField(e, {name, value}) {
         if (!this.props.isValid || this.props.isValid(value)) {
             this.set(value);
@@ -88,7 +99,7 @@ export class StorageField extends React.Component {
     handleChangeVar(value) {
         let pathKey = this.getPathKey();
         pathKey.shift();
-        if (pathKey.length > 0) value = lodash.get(value || {}, pathKey, undefined);
+        if (pathKey.length > 0) value = lodash.get(value || {}, pathKey, this.props.defaultSessionValue);
         value = value || this.props.defaultSessionValue;
         this.setState({value: value});
         if (this.props.onChange) {
@@ -118,7 +129,7 @@ export class StorageField extends React.Component {
             ...props,
             name: this.getName(),
             value: this.state.value,
-            onChange: this.handleChangeField,
+            onChange: this.handleChangeFieldWrapper,
             onBlur: this.handleBlur,
         };
         let component = this.props.component
@@ -146,6 +157,8 @@ StorageField.defaultProps = {
     getErrors: (value) => [],
     errors: [],
     storageFieldData: undefined,
+    getValueOnChange: undefined,
+    wrapValue: undefined,
 };
 
 StorageField.propTypes = {
@@ -159,4 +172,6 @@ StorageField.propTypes = {
     getErrors: PropTypes.func,
     errors: PropTypes.arrayOf(PropTypes.string),
     storageFieldData: PropTypes.instanceOf(StorageFieldData),
+    getValueOnChange: PropTypes.func,
+    wrapValue: PropTypes.func,
 };

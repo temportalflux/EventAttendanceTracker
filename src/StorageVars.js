@@ -1,6 +1,7 @@
 import * as lodash from "lodash";
 import StorageVariable from "./StorageVariable";
 import {VISUAL_STATES} from "./States";
+import moment from "moment";
 
 export let STORAGE_VARS = {
     STATE: {
@@ -12,12 +13,28 @@ export let STORAGE_VARS = {
     },
     EVENT_TYPE: {
         useSession: true,
+        initialValue: 'Educational',
     },
     RA: {
         useSession: true,
     },
     LOCATION: {
         useSession: true,
+    },
+    DATE: {
+        useSession: true,
+        initialValue: moment(),
+        wrapper: (value) => moment(value),
+    },
+    TIME_START: {
+        useSession: true,
+        initialValue: moment(),
+        wrapper: (value) => moment(value),
+    },
+    TIME_END: {
+        useSession: true,
+        initialValue: moment(),
+        wrapper: (value) => moment(value),
     },
     ATTENDANCE: {
         useSession: true,
@@ -27,8 +44,8 @@ export let STORAGE_VARS = {
         useSession: true,
         initialValue: {
             recipient: {
-                user: 'dustin.yost', //'jcadrette',
-                host: '@mymail.champlain.edu',
+                user: 'jcadrette',
+                host: '@champlain.edu',
             },
             subject: 'Email subject here',
             body:

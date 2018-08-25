@@ -10,11 +10,16 @@
     "deploy": "gh-pages-with-token -d build"
   },
   "dependencies": {
+    "gapi-client": "0.0.3",
+    "googleapis": "^33.0.0",
     "install": "^0.12.1",
+    "js-base64": "^2.4.8",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "query-string": "~5.1.1",
     "react": "^16.4.2",
+    "react-datetime": "^2.15.0",
     "react-dom": "^16.4.2",
     "react-icons": "^3.0.5",
     "react-router-dom": "^4.3.1",

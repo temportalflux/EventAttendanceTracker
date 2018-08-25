@@ -1,4 +1,5 @@
 import * as shortid from "shortid";
+import {Base64} from 'js-base64';
 
 export default class GoogleApi {
 
@@ -44,14 +45,12 @@ export default class GoogleApi {
     }
 
     loadApi() {
-        let promise = this.loadApiAsync();
+        this.loadApiAsync();
     }
 
     async loadApiAsync() {
-        let script = await this.loadScript('https://apis.google.com/js/api.js');
+        await this.loadScript('https://apis.google.com/js/api.js');
         await new Promise(resolve => window.gapi.load('client', resolve));
-
-        console.log(window.gapi);
 
         let {api_key, client_id} = this.getAppInfo();
         let clientInfo = {
@@ -61,41 +60,84 @@ export default class GoogleApi {
             scope: this.scopes.join(' '),
         };
         await window.gapi.client.init(clientInfo);
-        //await this.sendEmail('dustin.yost.t@gmail.com', [], [], 'EVT Test ' + shortid.generate(), 'this is a test');
     }
 
-    async sendEmail(receiver, cc, bcc, subject, body) {
-        await window.gapi.auth2.getAuthInstance().signIn();
-        let headers = [
-            [ 'To', receiver ],
-            [ 'From', 'me' ],
-            [ 'Subject', subject ],
-            //[ 'Content-Type', 'text/plain; charset=utf-8' ],
-            //[ 'MIME-Version', '1.0' ],
-        ];
-        if (cc) headers.push([ 'Cc', cc ]);
-        if (bcc) headers.push([ 'Bcc', bcc ]);
+    static encode(str) {
+        return window.btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
 
-        let email = headers.map((headerItem) => `${headerItem.join(': ')}\r\n`).join('');
-        email = `${email}\r\n${body}`;
+    static buildHeader(components) {
+        return components.map((item) => `${item.join(': ')}`).join('\r\n');
+    }
+
+    static async sendEmail(receivers, cc, bcc, subject, body, attachments) {
+        await window.gapi.auth2.getAuthInstance().signIn();
+
+        let boundary = shortid.generate();
+        let email = [];
+
+        // Build the main header
+        {
+            let header = [
+                [ 'Content-Type', `multipart/mixed; boundary="${boundary}"` ],
+                [ 'MIME-Version', '1.0' ],
+                [ 'From', 'me' ],
+                [ 'To', receivers ],
+                [ 'Subject', subject ],
+            ];
+            if (cc.length > 0) header.push([ 'Cc', cc ]);
+            if (bcc.length > 0) header.push([ 'Bcc', bcc ]);
+            email.push(GoogleApi.buildHeader(header));
+        }
+
+        email.push('');
+        email.push(`--${boundary}`);
+
+        // Main email
+        email.push(GoogleApi.buildHeader([
+            [ 'Content-Type', 'text/html; charset=utf-8' ],
+            [ 'Content-Transfer-Encoding', 'quoted-printable' ],
+        ]));
+        email.push('');
+        email.push(body);
+
+        // Generate attachment content
+        (attachments || []).forEach((attachment) => {
+            email.push('');
+            email.push(`--${boundary}`);
+            email.push(GoogleApi.buildHeader([
+                [ 'Content-Type', `${attachment.contentType}` ],
+                [ 'Content-Transfer-Encoding', 'base64' ],
+                [ 'Content-Disposition', `attachment; filename="${attachment.filename}"` ]
+            ]));
+            email.push('');
+            email.push(attachment.bytes);
+        });
+
+        email.push('');
+        email.push(`--${boundary}--`);
+
+        email = email.join('\r\n');
 
         let request = window.gapi.client.gmail.users.messages.send({
             userId: 'me',
             resource: {
-                raw: window.btoa(email).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''),
+                raw: Base64.encodeURI(email),
             },
         });
-        /*
-        https://developers.google.com/gmail/api/v1/reference/users/messages/send#examples
-        // Using the js-base64 library for encoding:
-        // https://www.npmjs.com/package/js-base64
-        var base64EncodedEmail = Base64.encodeURI(email);
-        */
         return await new Promise((resolve, reject) => {
             request.execute((response) => {
-                if (response.error && response.error.code !== 200)
-                    reject(response.error);
-                else resolve(response);
+                if(response.labelIds && response.labelIds.indexOf('SENT') > -1) {
+                    resolve({
+                        response: response,
+                        success: true,
+                    });
+                }
+                else {
+                    if (response.error && response.error.code !== 200)
+                        reject(response, response.error);
+                    else reject(response);
+                }
             })
         });
     }

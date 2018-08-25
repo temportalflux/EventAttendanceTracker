@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Dropdown, Input} from "semantic-ui-react";
 import {listify} from "../util/ReactUtil";
-import {STORAGE_VARS} from "../StorageVars";
 
 export class Email extends React.Component {
 

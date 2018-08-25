@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Input, TextArea} from "semantic-ui-react";
+import {Dropdown, Input, TextArea} from "semantic-ui-react";
 import {DropdownStateful} from "../../components/DropdownStateful";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
 import {VISUAL_STATES} from "../../States";
@@ -9,6 +9,8 @@ import {StorageFieldSection} from "../../components/storage/StorageFieldSection"
 import StorageFieldData from "../../components/storage/StorageFieldData";
 import StorageFieldSectionData from "../../components/storage/StorageFieldSectionData";
 import {Email} from "../../components/Email";
+import moment from 'moment';
+import DateTime from 'react-datetime';
 
 export default class EventInfo extends React.Component {
 
@@ -45,9 +47,14 @@ export default class EventInfo extends React.Component {
                             validator: EventInfo.buildValidatorNonEmpty(),
                             info: {
                                 sessionKey: STORAGE_KEYS.EVENT_TYPE,
-                                component: Input,
+                                component: Dropdown,
                                 fieldLabel: 'Event Type',
                                 defaultSessionValue: '',
+                                options: listify([
+                                    'Educational',
+                                    'Community Development',
+                                    'Engagement',
+                                ]),
                             },
                         },
                         {
@@ -69,6 +76,49 @@ export default class EventInfo extends React.Component {
                                 component: Input,
                                 fieldLabel: 'Location (Hall)',
                                 defaultSessionValue: '',
+                            },
+                        },
+                        {
+                            required: true,
+                            validator: EventInfo.buildValidatorNonEmpty(),
+                            info: {
+                                sessionKey: STORAGE_KEYS.DATE,
+                                component: DateTime,
+                                fieldLabel: 'Date',
+                                defaultSessionValue: moment(),
+                                wrapValue: (serialized) => moment(serialized),
+                                getValueOnChange: (moment) => moment.format('MM/DD/YYYY'),
+                                dateFormat: true,
+                                timeFormat: false,
+                                closeOnSelect: true,
+                            },
+                        },
+                        {
+                            required: true,
+                            validator: EventInfo.buildValidatorNonEmpty(),
+                            info: {
+                                sessionKey: STORAGE_KEYS.TIME_START,
+                                component: DateTime,
+                                fieldLabel: 'Start',
+                                defaultSessionValue: moment(),
+                                wrapValue: (serialized) => moment(serialized),
+                                getValueOnChange: (moment) => moment,
+                                dateFormat: false,
+                                timeFormat: true,
+                            },
+                        },
+                        {
+                            required: true,
+                            validator: EventInfo.buildValidatorNonEmpty(),
+                            info: {
+                                sessionKey: STORAGE_KEYS.TIME_END,
+                                component: DateTime,
+                                fieldLabel: 'End',
+                                defaultSessionValue: moment(),
+                                wrapValue: (serialized) => moment(serialized),
+                                getValueOnChange: (moment) => moment,
+                                dateFormat: false,
+                                timeFormat: true,
                             },
                         },
                     ].map((props) => new StorageFieldData(props)),

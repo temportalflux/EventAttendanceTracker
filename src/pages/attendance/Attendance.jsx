@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Button, Input} from "semantic-ui-react";
+import {Input} from "semantic-ui-react";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
 import {VISUAL_STATES} from "../../States";
 import EventInfo from "../eventInfo/EventInfo";
@@ -91,16 +91,18 @@ export default class Attendance extends React.Component {
                     text: 'Submit New Attendee',
                     handle: this.validateAndSubmit,
                 }}
+                secondary={{
+                    text: 'Finish',
+                    handle: () => {
+                        STORAGE_VARS.STATE.set(VISUAL_STATES.CONFIRMATION);
+                    },
+                }}
             >
                 <StorageFieldSection
                     sectionData={this.state.section}
                     sectionDepth={0}
                     validateEventKey={''}
                 />
-
-                <Button color={'black'} onClick={() => {
-                    STORAGE_VARS.STATE.set(VISUAL_STATES.CONFIRMATION);
-                }}>Finish</Button>
 
             </Base>
         );
