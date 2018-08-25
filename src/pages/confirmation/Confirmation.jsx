@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Button, Divider, Grid, Loader, Segment, Table} from "semantic-ui-react";
+import {Button, Divider, Grid, Header, Loader, Segment, Table} from "semantic-ui-react";
 import {STORAGE_VARS} from "../../StorageVars";
 import * as shortid from "shortid";
 import GoogleApi from "../../GoogleApi";
@@ -32,7 +32,7 @@ export default class Confirmation extends React.Component {
             STORAGE_VARS.EVENT_NAME.get(''),
             STORAGE_VARS.EVENT_TYPE.get(''),
             STORAGE_VARS.LOCATION.get(''),
-            STORAGE_VARS.ATTENDANCE.get([]).map((attendee) => attendee.id),
+            STORAGE_VARS.ATTENDANCE.get([]).map((attendee) => `${attendee.id}`.padStart(7, '0')),
             STORAGE_VARS.DATE.get(moment()).format('MM/DD/YYYY'),
             STORAGE_VARS.TIME_START.get(moment()).format('hh:mm A'),
             STORAGE_VARS.TIME_END.get(moment()).format('hh:mm A'),
@@ -132,10 +132,11 @@ export default class Confirmation extends React.Component {
             let rawValue = storageVar.get(undefined);
             if (rawValue) {
                 // Turn ${STORAGEVAR|raw|rawjs} into eval(rawjs) where VALUE in rawjs is STORAGEVAR's raw value
-                let regex = new RegExp(`\\\${${storageVar.key}\\\|raw\\\|([^}]*)}`, 'g');
+                let regex = new RegExp(`\\\${${storageVar.key}\\|raw\\|([^}]*)}`, 'g');
                 compiled = compiled.replace(regex, (fullStr, group) => {
                     group = group.replace(/VALUE/g, JSON.stringify(rawValue));
-                    group = eval(group);
+                    let evaluator = new Function('VALUE', `return ${group}`); // eslint-disable-line no-new-func
+                    group = evaluator(JSON.stringify(rawValue));
                     return group;
                 });
             }
@@ -169,6 +170,9 @@ export default class Confirmation extends React.Component {
 
                     <Button fluid primary onClick={this.handleSendAttendeeEmail}>Send Attendee Emails</Button>
 
+                    <Header>
+                        There were {STORAGE_VARS.ATTENDANCE.get([]).length} students in attendance.
+                    </Header>
                     <Table celled striped>
                         <Table.Header>
                             <Table.Row>

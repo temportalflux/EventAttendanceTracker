@@ -51,12 +51,14 @@ export let STORAGE_VARS = {
                 user: 'jcadrette',
                 host: '@champlain.edu',
             },
-            subject: '${EVENT_TYPE}: ${EVENT_NAME} in ${LOCATION} Participation Record',
+            subject: `$\{EVENT_TYPE}: $\{EVENT_NAME} in $\{LOCATION} Participation Record`,
             body:
 `Hi Jared,
+
 Here is the participation spreadsheet for my event.
 It was an $\{EVENT_TYPE} program named $\{EVENT_NAME} in $\{LOCATION} on $\{DATE} from $\{TIME_START} to $\{TIME_END}.
 There were $\{ATTENDANCE|raw|VALUE.length} people in attendance.
+
 Thank you for your time,
 $\{RA}`,
         },
@@ -68,6 +70,7 @@ $\{RA}`,
     ATTENDEE_ID: {
         useSession: true,
         initialValue: '',
+        wrapStringify: (value) => value.padStart(7, '0'),
     },
     ATTENDEE_EMAIL_ADDRESS: {
         useSession: true,
@@ -79,14 +82,15 @@ $\{RA}`,
     ATTENDEE_EMAIL: {
         useSession: true,
         initialValue: {
-            subject: 'Email template',
+            subject: `Thank you for attending $\{EVENT_NAME} at $\{LOCATION}`,
             body:
-`This is
-an
-email
-template
+`Hi $\{ATTENDEE_NAME},
 
-thank you for your time`,
+Thank you for coming to $\{EVENT_NAME} at $\{LOCATION} on $\{DATE}!
+Please take a moment to fill out our program evaluation.
+
+Again, thank you for coming!
+$\{RA}`,
         },
     },
 };
