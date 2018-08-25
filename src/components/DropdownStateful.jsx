@@ -29,8 +29,6 @@ export class DropdownStateful extends React.Component {
         return (
             <Dropdown
                 search selection
-                allowAdditions
-                multiple
                 onAddItem={this.handleAddOption}
                 {...this.props}
                 options={this.state.options}

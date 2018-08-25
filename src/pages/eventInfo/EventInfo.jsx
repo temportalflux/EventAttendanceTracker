@@ -48,7 +48,7 @@ export default class EventInfo extends React.Component {
                             validator: EventInfo.buildValidatorNonEmpty(),
                             info: {
                                 sessionKey: STORAGE_KEYS.EVENT_TYPE,
-                                component: Dropdown,
+                                component: DropdownStateful,
                                 fieldLabel: 'Event Type',
                                 popup: 'The type of event',
                                 defaultSessionValue: '',
@@ -67,6 +67,8 @@ export default class EventInfo extends React.Component {
                                 component: DropdownStateful,
                                 fieldLabel: 'Resident Assistant(s)',
                                 popup: 'The RAs involved in putting on the event',
+                                multiple: true,
+                                allowAdditions: true,
                                 defaultSessionValue: [],
                                 options: listify(STORAGE_VARS.RA.get([])),
                             },
