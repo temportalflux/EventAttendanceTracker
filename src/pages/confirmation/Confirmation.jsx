@@ -8,6 +8,7 @@ import ParticipationSpreadsheet from "./ParticipationSpreadsheet";
 import moment from "moment";
 import {Base64} from 'js-base64';
 import {FaCheck, FaDownload, FaTimes} from "react-icons/fa";
+import * as lodash from "lodash";
 
 export default class Confirmation extends React.Component {
 
@@ -39,10 +40,16 @@ export default class Confirmation extends React.Component {
     }
 
     async handleSendAttendanceEmail() {
+        STORAGE_VARS.ATTENDEE_NAME.clear(true);
+        STORAGE_VARS.ATTENDEE_ID.clear(true);
+        STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
+
         let emailVar = STORAGE_VARS.ATTENDANCE_EMAIL.get({});
         let receiver = `${emailVar.recipient.user}${emailVar.recipient.host}`;
         let emailInfo = [
-            receiver, [], [], emailVar.subject, emailVar.body,
+            receiver, [], [],
+            Confirmation.compileTextForStorageVars(emailVar.subject),
+            Confirmation.compileTextForStorageVars(emailVar.body),
         ];
         let attachments = [];
 
@@ -56,6 +63,7 @@ export default class Confirmation extends React.Component {
 
         this.setState({ sendAttendanceStatus: 'pending' });
         let {success} = await GoogleApi.sendEmail(...emailInfo);
+        //let success = true;
         this.setState({ sendAttendanceStatus: success ? 'success' : 'failure' });
     }
 
@@ -70,22 +78,40 @@ export default class Confirmation extends React.Component {
     }
 
     async handleSendAttendeeEmail() {
-        let attendeeEmails = STORAGE_VARS.ATTENDANCE.get([]).map((attendee) => `${attendee.email.user}${attendee.email.host}`);
+        let attendees = STORAGE_VARS.ATTENDANCE.get([]);
         let email = STORAGE_VARS.ATTENDEE_EMAIL.get({});
-        let emailInfo = [
-            [], [], email['subject'], email['body']
-        ];
 
         await new Promise(resolve => this.setState({ sendAttendeesStatus: [] }, resolve));
 
-        for (let i = 0; i < attendeeEmails.length; i++) {
+        STORAGE_VARS.ATTENDEE_NAME.clear(true);
+        STORAGE_VARS.ATTENDEE_ID.clear(true);
+        STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
+
+        for (let i = 0; i < attendees.length; i++) {
             {
                 let attendeeStatus = this.state.sendAttendeesStatus;
                 attendeeStatus[i] = 'pending';
                 this.setState({ sendAttendeesStatus: attendeeStatus });
             }
 
-            let {success} = await GoogleApi.sendEmail(attendeeEmails[i], ...emailInfo);
+            STORAGE_VARS.ATTENDEE_NAME.set(attendees[i].name, true);
+            STORAGE_VARS.ATTENDEE_ID.set(attendees[i].id, true);
+            STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.set(attendees[i].email, true);
+
+            let compiledSubject = Confirmation.compileTextForStorageVars(email['subject']);
+            let compiledBody = Confirmation.compileTextForStorageVars(email['body']);
+
+            STORAGE_VARS.ATTENDEE_NAME.clear(true);
+            STORAGE_VARS.ATTENDEE_ID.clear(true);
+            STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
+
+            ///*
+            let {success} = await GoogleApi.sendEmail(
+                `${attendees[i].email.user}${attendees[i].email.host}`,
+                [], [], compiledSubject, compiledBody,
+            );
+            //*/
+            //let success = true;
 
             {
                 let attendeeStatus = this.state.sendAttendeesStatus;
@@ -93,6 +119,29 @@ export default class Confirmation extends React.Component {
                 this.setState({ sendAttendeesStatus: attendeeStatus });
             }
         }
+    }
+
+    static compileTextForStorageVars(str) {
+        return lodash.values(STORAGE_VARS).reduce((compiled, storageVar) => {
+            // Replace the text version
+            let value = storageVar.stringify(undefined);
+            if (value) {
+                compiled = compiled.replace(new RegExp(`\\\${${storageVar.key}}`, 'g'), value);
+            }
+            // Replace macros
+            let rawValue = storageVar.get(undefined);
+            if (rawValue) {
+                // Turn ${STORAGEVAR|raw|rawjs} into eval(rawjs) where VALUE in rawjs is STORAGEVAR's raw value
+                let regex = new RegExp(`\\\${${storageVar.key}\\\|raw\\\|([^}]*)}`, 'g');
+                compiled = compiled.replace(regex, (fullStr, group) => {
+                    group = group.replace(/VALUE/g, JSON.stringify(rawValue));
+                    group = eval(group);
+                    return group;
+                });
+            }
+
+            return compiled;
+        }, str);
     }
 
     render() {

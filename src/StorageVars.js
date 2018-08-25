@@ -17,6 +17,7 @@ export let STORAGE_VARS = {
     },
     RA: {
         useSession: true,
+        wrapStringify: (value) => value.join(', '),
     },
     LOCATION: {
         useSession: true,
@@ -25,16 +26,19 @@ export let STORAGE_VARS = {
         useSession: true,
         initialValue: moment(),
         wrapper: (value) => moment(value),
+        wrapStringify: (value) => value.format('MM/DD/YYYY'),
     },
     TIME_START: {
         useSession: true,
         initialValue: moment(),
         wrapper: (value) => moment(value),
+        wrapStringify: (value) => value.format('hh:mm A'),
     },
     TIME_END: {
         useSession: true,
         initialValue: moment(),
         wrapper: (value) => moment(value),
+        wrapStringify: (value) => value.format('hh:mm A'),
     },
     ATTENDANCE: {
         useSession: true,
@@ -47,14 +51,14 @@ export let STORAGE_VARS = {
                 user: 'jcadrette',
                 host: '@champlain.edu',
             },
-            subject: 'Email subject here',
+            subject: '${EVENT_TYPE}: ${EVENT_NAME} in ${LOCATION} Participation Record',
             body:
-`This is
-an
-email
-template
-
-thank you for your time`,
+`Hi Jared,
+Here is the participation spreadsheet for my event.
+It was an $\{EVENT_TYPE} program named $\{EVENT_NAME} in $\{LOCATION} on $\{DATE} from $\{TIME_START} to $\{TIME_END}.
+There were $\{ATTENDANCE|raw|VALUE.length} people in attendance.
+Thank you for your time,
+$\{RA}`,
         },
     },
     ATTENDEE_NAME: {

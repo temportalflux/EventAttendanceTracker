@@ -2,17 +2,19 @@ import * as lodash from "lodash";
 
 export default class StorageVariable {
 
-    constructor(sessionKey, {useSession, initialValue, wrapper}) {
+    constructor(sessionKey, {useSession, initialValue, wrapper, wrapStringify}) {
         this.key = sessionKey;
         this.useSession = useSession;
         this.initialValue = initialValue;
         this.wrapper = wrapper;
+        this.wrapStringify = wrapStringify;
         this.listeners = {};
 
         this.init = this.init.bind(this);
         this.getStorage = this.getStorage.bind(this);
         this.get = this.get.bind(this);
         this.set = this.set.bind(this);
+        this.stringify = this.stringify.bind(this);
         this.clear = this.clear.bind(this);
         this.subscribe = this.subscribe.bind(this);
         this.unsubscribe = this.unsubscribe.bind(this);
@@ -40,17 +42,27 @@ export default class StorageVariable {
         return cachedHits;
     }
 
-    set(value) {
+    set(value, silent) {
         let json = JSON.stringify(value);
         this.getStorage().setItem(this.key, json);
-        this.dispatch(value);
+        if (!silent)
+            this.dispatch(value);
         return json;
     }
 
-    clear() {
+    stringify(defaultValue) {
+        let value = this.get(defaultValue);
+        if (value && this.wrapStringify) {
+            value = this.wrapStringify(value);
+        }
+        return value;
+    }
+
+    clear(silent) {
         this.getStorage().removeItem(this.key);
         this.init();
-        this.dispatch(this.initialValue);
+        if (!silent)
+            this.dispatch(this.initialValue);
     }
 
     subscribe(handle, handler) {
