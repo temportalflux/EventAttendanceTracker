@@ -82,7 +82,11 @@ export default class GoogleApi {
             }
             catch (err) {
                 this.isAuthenticated = false;
-                return;
+                console.error(err);
+                return {
+                    success: false,
+                    response: err,
+                };
             }
         }
 
