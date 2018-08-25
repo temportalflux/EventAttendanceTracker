@@ -26,7 +26,7 @@ export default class EventInfo extends React.Component {
         this.state = {
             fields: [
                 {
-                    title: 'Event',
+                    text: 'Event',
                     segment: {
                         color: 'blue',
                     },
@@ -39,6 +39,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.EVENT_NAME,
                                 component: Input,
                                 fieldLabel: 'Event Name',
+                                popup: 'The name of the event',
                                 defaultSessionValue: '',
                             },
                         },
@@ -49,6 +50,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.EVENT_TYPE,
                                 component: Dropdown,
                                 fieldLabel: 'Event Type',
+                                popup: 'The type of event',
                                 defaultSessionValue: '',
                                 options: listify([
                                     'Educational',
@@ -64,6 +66,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.RA,
                                 component: DropdownStateful,
                                 fieldLabel: 'Resident Assistant(s)',
+                                popup: 'The RAs involved in putting on the event',
                                 defaultSessionValue: [],
                                 options: listify(STORAGE_VARS.RA.get([])),
                             },
@@ -75,6 +78,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.LOCATION,
                                 component: Input,
                                 fieldLabel: 'Location (Hall)',
+                                popup: 'The hall the event is in (or where the event took place)',
                                 defaultSessionValue: '',
                             },
                         },
@@ -85,6 +89,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.DATE,
                                 component: DateTime,
                                 fieldLabel: 'Date',
+                                popup: 'The date of the event',
                                 defaultSessionValue: moment(),
                                 wrapValue: (serialized) => moment(serialized),
                                 getValueOnChange: (moment) => moment.format('MM/DD/YYYY'),
@@ -100,6 +105,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.TIME_START,
                                 component: DateTime,
                                 fieldLabel: 'Start',
+                                popup: 'The start time',
                                 defaultSessionValue: moment(),
                                 wrapValue: (serialized) => moment(serialized),
                                 getValueOnChange: (moment) => moment,
@@ -114,6 +120,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: STORAGE_KEYS.TIME_END,
                                 component: DateTime,
                                 fieldLabel: 'End',
+                                popup: 'The end time',
                                 defaultSessionValue: moment(),
                                 wrapValue: (serialized) => moment(serialized),
                                 getValueOnChange: (moment) => moment,
@@ -124,7 +131,7 @@ export default class EventInfo extends React.Component {
                     ].map((props) => new StorageFieldData(props)),
                 },
                 {
-                    title: 'Attendance Email Info',
+                    text: 'Attendance Email Info',
                     fields: [
                         {
                             required: true,
@@ -133,6 +140,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.recipient`,
                                 component: Email,
                                 fieldLabel: 'Recipient',
+                                popup: 'The email to send the attendance/participation form to',
                                 defaultSessionValue: '',
                             },
                         },
@@ -143,6 +151,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.subject`,
                                 component: Input,
                                 fieldLabel: 'Subject',
+                                popup: 'The subject of the attendance/participation email',
                                 defaultSessionValue: '',
                             },
                         },
@@ -153,13 +162,14 @@ export default class EventInfo extends React.Component {
                                 sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.body`,
                                 component: TextArea,
                                 fieldLabel: 'Email Template',
+                                popup: 'The body of the attendance/participation email',
                                 defaultSessionValue: '',
                             },
                         },
                     ].map((props) => new StorageFieldData(props)),
                 },
                 {
-                    title: 'Attendee Email Info',
+                    text: 'Attendee Email Info',
                     fields: [
                         {
                             required: true,
@@ -168,6 +178,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: `${STORAGE_KEYS.ATTENDEE_EMAIL}.subject`,
                                 component: Input,
                                 fieldLabel: 'Subject',
+                                popup: 'The subject of the attendee response email',
                                 defaultSessionValue: '',
                             },
                         },
@@ -178,6 +189,7 @@ export default class EventInfo extends React.Component {
                                 sessionKey: `${STORAGE_KEYS.ATTENDEE_EMAIL}.body`,
                                 component: TextArea,
                                 fieldLabel: 'Email Template',
+                                popup: 'The body of the attendee response email',
                                 defaultSessionValue: '',
                             },
                         },

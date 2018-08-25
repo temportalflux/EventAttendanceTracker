@@ -27,6 +27,7 @@ export default class Attendance extends React.Component {
                             sessionKey: STORAGE_KEYS.ATTENDEE_NAME,
                             component: Input,
                             fieldLabel: 'Name',
+                            popup: 'Your name',
                             defaultSessionValue: '',
                         },
                     },
@@ -37,6 +38,7 @@ export default class Attendance extends React.Component {
                             sessionKey: STORAGE_KEYS.ATTENDEE_ID,
                             component: Input,
                             fieldLabel: 'Student ID',
+                            popup: 'Your student ID number (7 digits)',
                             defaultSessionValue: '',
                             label: '82-',
                         },
@@ -48,6 +50,8 @@ export default class Attendance extends React.Component {
                             sessionKey: STORAGE_KEYS.ATTENDEE_EMAIL_ADDRESS,
                             component: Email,
                             fieldLabel: 'Email',
+                            popup: 'Your mymail',
+                            onlyMyMail: true,
                             defaultSessionValue: '',
                         },
                     },
@@ -65,7 +69,7 @@ export default class Attendance extends React.Component {
     static isInputValidID(value, required) {
         let errors = [];
         if (required) {
-            if (!value || !value.match(/^[0-9]{0,7}$/i))
+            if (!value || !value.match(/^[0-9]{7}$/i))
                 errors.push('Field must be 0-7 numbers');
         }
         return errors;

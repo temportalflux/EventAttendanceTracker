@@ -1,8 +1,8 @@
 import React from 'react';
 import {ClearStorage, LoadStorageVariables, STORAGE_KEYS, STORAGE_VARS} from "./StorageVars";
-import {Button, Container, Divider, Form, Header} from "semantic-ui-react";
-import {VISUAL_STATE_DETAILS, VISUAL_STATES} from "./States";
-import {Route, Redirect} from "react-router-dom";
+import {Button, Container, Divider, Dropdown, Form, Header} from "semantic-ui-react";
+import {VISUAL_STATE_DETAILS, VISUAL_STATE_LIST, VISUAL_STATES} from "./States";
+import {Redirect, Route} from "react-router-dom";
 import * as lodash from "lodash";
 import queryString from 'query-string';
 import GoogleApi from "./GoogleApi";
@@ -13,6 +13,7 @@ export default class App extends React.Component {
         super(props);
 
         this.handleVisualStateChange = this.handleVisualStateChange.bind(this);
+        this.handleSelectVisualState = this.handleSelectVisualState.bind(this);
         this.reset = this.reset.bind(this);
         this.renderApp = this.renderApp.bind(this);
 
@@ -35,6 +36,10 @@ export default class App extends React.Component {
 
     handleVisualStateChange(visualState) {
         this.setState({ visualState: visualState });
+    }
+
+    handleSelectVisualState(e, {value}) {
+        STORAGE_VARS.STATE.set(value);
     }
 
     reset() {
@@ -71,7 +76,12 @@ export default class App extends React.Component {
                     <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>
 
                     <Header textAlign={'center'}>
-                        {VISUAL_STATE_DETAILS[this.state.visualState].title}
+                        <Dropdown
+                            search selection
+                            options={VISUAL_STATE_LIST}
+                            value={this.state.visualState}
+                            onChange={this.handleSelectVisualState}
+                        />
                     </Header>
 
                     <Divider hidden />

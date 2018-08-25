@@ -8,25 +8,30 @@ export default class Base extends React.Component {
         let colCount = 0;
         if (this.props.secondary !== undefined) colCount++;
         if (this.props.primary !== undefined) colCount++;
+        let footer = <div/>;
+        if (colCount > 0) {
+            footer = (
+                <div>
+                    <Divider hidden />
+
+                    <Grid columns={colCount}>
+                        <Grid.Row>
+                            <Grid.Column>
+                                { this.props.secondary && <Button fluid secondary onClick={this.props.secondary.handle}>{this.props.secondary.text}</Button> }
+                            </Grid.Column>
+
+                            <Grid.Column>
+                                { this.props.primary && <Button fluid primary onClick={this.props.primary.handle}>{this.props.primary.text}</Button> }
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </div>
+            );
+        }
         return (
             <div id={'page'}>
                 {this.props.children}
-
-                <Divider hidden />
-
-                <Grid columns={colCount}>
-                    <Grid.Row>
-                        <Grid.Column>
-                            { this.props.secondary && <Button fluid secondary onClick={this.props.secondary.handle}>{this.props.secondary.text}</Button> }
-                        </Grid.Column>
-
-                        <Grid.Column>
-                            { this.props.primary && <Button fluid primary onClick={this.props.primary.handle}>{this.props.primary.text}</Button> }
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-
-
+                {footer}
             </div>
         );
     }

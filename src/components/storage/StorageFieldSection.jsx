@@ -42,7 +42,7 @@ export class StorageFieldSection extends React.Component {
 }
 
 StorageFieldSection.defaultProps = {
-    title: undefined,
+    text: undefined,
     segment: {},
     sectionDepth: 0,
     validateEventKey: undefined,
@@ -55,7 +55,7 @@ StorageFieldSection.propTypes = {
         PropTypes.instanceOf(StorageFieldSectionData)
     ]).isRequired,
 
-    title: PropTypes.string,
+    text: PropTypes.string,
     segment: PropTypes.shape(Segment.propTypes),
     sectionDepth: PropTypes.number,
 

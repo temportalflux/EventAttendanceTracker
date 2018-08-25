@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {STORAGE_VARS} from "../../StorageVars";
 import * as lodash from "lodash";
 import * as shortid from "shortid";
-import {Form, Label} from "semantic-ui-react";
+import {Form, Label, Popup} from "semantic-ui-react";
 import StorageFieldData from "./StorageFieldData";
 
 export class StorageField extends React.Component {
@@ -135,9 +135,14 @@ export class StorageField extends React.Component {
         let component = this.props.component
             ? React.createElement(this.props.component, compProps)
             : this.props.render(compProps, this.handleChangeField);
+        let label = <label>{this.props.fieldLabel}</label>;
+        if (this.props.popup)
+            label = (
+                <Popup trigger={label} content={this.props.popup}/>
+            );
         return (
             <Form.Field required={this.props.required} error={this.state.errors.length > 0}>
-                <label>{this.props.fieldLabel}</label>
+                {label}
                 {component}
                 {this.state.errors && this.state.errors.map((errorMessage) => (
                     <Label key={shortid.generate()} pointing color='red'>{errorMessage}</Label>
@@ -159,6 +164,7 @@ StorageField.defaultProps = {
     storageFieldData: undefined,
     getValueOnChange: undefined,
     wrapValue: undefined,
+    popup: undefined,
 };
 
 StorageField.propTypes = {
@@ -174,4 +180,5 @@ StorageField.propTypes = {
     storageFieldData: PropTypes.instanceOf(StorageFieldData),
     getValueOnChange: PropTypes.func,
     wrapValue: PropTypes.func,
+    popup: PropTypes.string,
 };
