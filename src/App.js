@@ -62,9 +62,18 @@ export default class App extends React.Component {
             let storageKeys = lodash.values(STORAGE_KEYS);
             lodash.forIn(queries, (value, key) => {
                 if (storageKeys.includes(key)) {
-                    STORAGE_VARS[key].set(JSON.parse(value));
+                    value = JSON.parse(value);
+                    let fullValue = STORAGE_VARS[key].get();
+                    if (typeof fullValue === 'object') {
+                        fullValue = lodash.defaultsDeep(value, fullValue);
+                    }
+                    else {
+                        fullValue = value;
+                    }
+                    STORAGE_VARS[key].set(fullValue);
                 }
             });
+            console.log("Loaded query into storage", sessionStorage, localStorage);
             return <Redirect to={router.location.pathname} />;
         }
 
