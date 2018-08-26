@@ -56,9 +56,6 @@ export default class App extends React.Component {
     }
 
     renderApp(router) {
-        console.log(router);
-        console.log(process);
-        console.log(window.location.href);
         const queries = queryString.parse(router.location.search);
 
         if (Object.keys(queries).length > 0) {
@@ -68,7 +65,7 @@ export default class App extends React.Component {
                     STORAGE_VARS[key].set(JSON.parse(value));
                 }
             });
-            return <Redirect to={`${router.location.pathname}`} />;
+            return <Redirect to={router.location.pathname} />;
         }
 
         return (
