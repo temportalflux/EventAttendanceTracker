@@ -1,6 +1,6 @@
 {
   "name": "event-attendance-tracker",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "homepage": "http://temportalflux.github.io/EventAttendanceTracker",
   "scripts": {
