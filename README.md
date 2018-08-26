@@ -5,7 +5,7 @@ For Champlain College Resident Assistants
 
 [Deployed Site](https://temportalflux.github.io/EventAttendanceTracker/)
 
-<a href="https://temportalflux.github.io/EventAttendanceTracker/?EVENT_NAME="Brick Painting"&EVENT_TYPE="Community Development"&RA=["Dustin Yost"]&LOCATION="Whiting Hall"&ATTENDANCE_EMAIL={"recipient": {"user": "dustin.yost", "host": "@mymail.champlain.edu"}}" target="_blank">https://temportalflux.github.io/EventAttendanceTracker/?EVENT_NAME="Brick Painting"&EVENT_TYPE="Community Development"&RA=\["Dustin Yost"]&LOCATION="Whiting Hall"&ATTENDANCE_EMAIL={"recipient": {"user": "dustin.yost", "host": "@mymail.champlain.edu"}}</a>
+https://temportalflux.github.io/EventAttendanceTracker/?EVENT_NAME="Brick Painting"&EVENT_TYPE="Community Development"&RA=["Dustin Yost"]&LOCATION="Whiting Hall"&ATTENDANCE_EMAIL={"recipient": {"user": "dustin.yost", "host": "@mymail.champlain.edu"}}
 
 Pre-fill Options:
 - STATE: string (one of "EVENT_INFO", "ATTENDANCE", or "CONFIRMATION")
