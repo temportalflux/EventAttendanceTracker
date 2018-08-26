@@ -6,6 +6,7 @@ import {Redirect, Route} from "react-router-dom";
 import * as lodash from "lodash";
 import queryString from 'query-string';
 import GoogleApi from "./GoogleApi";
+import { Player } from 'video-react';
 
 export default class App extends React.Component {
 
@@ -15,10 +16,12 @@ export default class App extends React.Component {
         this.handleVisualStateChange = this.handleVisualStateChange.bind(this);
         this.handleSelectVisualState = this.handleSelectVisualState.bind(this);
         this.reset = this.reset.bind(this);
+        this.showDemo = this.showDemo.bind(this);
         this.renderApp = this.renderApp.bind(this);
 
         this.state = {
             visualState: VISUAL_STATES.EVENT_INFO,
+            demoVisible: false,
         };
 
         LoadStorageVariables();
@@ -46,6 +49,12 @@ export default class App extends React.Component {
         ClearStorage();
         this.setState({
             visualState: VISUAL_STATES.EVENT_INFO,
+        });
+    }
+
+    showDemo() {
+        this.setState({
+            demoVisible: !this.state.demoVisible,
         });
     }
 
@@ -77,11 +86,24 @@ export default class App extends React.Component {
             return <Redirect to={router.location.pathname} />;
         }
 
+        let demo = <div/>;
+        if (this.state.demoVisible) {
+            demo = (
+                <div>
+                    <Divider/>
+                    <Player>
+                        <source src="https://github.com/temportalflux/EventAttendanceTracker/releases/download/v1.0.0-demo/Event.Attendance.Tracker.mp4" />
+                    </Player>
+                </div>
+            );
+        }
+
         return (
             <Form>
 
                 <Container>
 
+                    <Button color={!this.state.demoVisible ? 'yellow' : undefined} floated={'left'} onClick={this.showDemo}>{!this.state.demoVisible ? 'HELP ME!' : 'Hide Demo'}</Button>
                     <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>
 
                     <Header textAlign={'center'}>
@@ -92,6 +114,8 @@ export default class App extends React.Component {
                             onChange={this.handleSelectVisualState}
                         />
                     </Header>
+
+                    {demo}
 
                     <Divider hidden />
 
