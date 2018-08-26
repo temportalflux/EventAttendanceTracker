@@ -55,8 +55,9 @@ export default class App extends React.Component {
         );
     }
 
-    renderApp({location}) {
-        const queries = queryString.parse(location.search);
+    renderApp(router) {
+        //console.log(router);
+        const queries = queryString.parse(router.location.search);
 
         if (Object.keys(queries).length > 0) {
             let storageKeys = lodash.values(STORAGE_KEYS);
@@ -65,7 +66,7 @@ export default class App extends React.Component {
                     STORAGE_VARS[key].set(JSON.parse(value));
                 }
             });
-            return <Redirect to={'/'} />;
+            return <Redirect to={`${router.location.pathname}`} />;
         }
 
         return (
