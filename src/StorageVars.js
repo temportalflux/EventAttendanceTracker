@@ -86,9 +86,7 @@ $\{RA}`,
             body:
 `Hi $\{ATTENDEE_NAME},
 
-Thank you for coming to $\{EVENT_NAME} at $\{LOCATION} on $\{DATE}!
-$\{EVENT_TYPE_raw|VALUE==='Educational'?'Please take a moment to fill out our program evaluation.':''}
-https://champlaincollege.wufoo.com/forms/educational-student-evaluation/
+Thank you for coming to $\{EVENT_NAME} at $\{LOCATION} on $\{DATE}!$\{EVENT_TYPE|raw|VALUE==='Educational'?'\\nPlease take a moment to fill out our program evaluation. https://champlaincollege.wufoo.com/forms/educational-student-evaluation/':''}
 
 Again, thank you for coming!
 $\{RA}`,
