@@ -87,7 +87,7 @@ $\{RA}`,
 `Hi $\{ATTENDEE_NAME},
 
 Thank you for coming to $\{EVENT_NAME} at $\{LOCATION} on $\{DATE}!
-Please take a moment to fill out our program evaluation.
+$\{EVENT_TYPE_raw|VALUE==='Educational'?'Please take a moment to fill out our program evaluation.':''}
 
 Again, thank you for coming!
 $\{RA}`,
