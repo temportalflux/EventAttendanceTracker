@@ -12,6 +12,27 @@ import {Email} from "../../components/Email";
 import moment from 'moment';
 import DateTime from 'react-datetime';
 
+export const EVENT_TYPES = {
+    "Educational: Sexual Violence Awareness": { type: 'Educational' },
+    "Educational: Racial Identity": { type: 'Educational' },
+    "Educational: Sustainability": { type: 'Educational' },
+    "Educational: Mental Health and Suicide Awareness": { type: 'Educational' },
+    "Educational: Bullying and Harassment": { type: 'Educational' },
+    "Educational: Religious Diversity": { type: 'Educational' },
+    "Educational: Cultural and Ethnic Identity": { type: 'Educational' },
+    "Educational: Gender and Sexuality": { type: 'Educational' },
+    "Educational: Disability Awareness": { type: 'Educational' },
+    "Educational: Academic Success": { type: 'Educational' },
+    "Educational: Sexual Health": { type: 'Educational' },
+    "Educational: Career and Professionalism": { type: 'Educational' },
+    "Educational: Citizenship": { type: 'Educational' },
+    "Educational: Life Skills": { type: 'Educational' },
+    "Educational: Alcohol, Marijuana, & Other Drugs": { type: 'Educational' },
+    "Educational: Other": { type: 'Educational' },
+    'Community Development': { type: 'Community Development' },
+    'Engagement': { type: 'Engagement' },
+};
+
 export default class EventInfo extends React.Component {
 
     static buildValidatorNonEmpty() {
@@ -52,11 +73,7 @@ export default class EventInfo extends React.Component {
                                 fieldLabel: 'Event Type',
                                 popup: 'The type of event',
                                 defaultSessionValue: '',
-                                options: listify([
-                                    'Educational',
-                                    'Community Development',
-                                    'Engagement',
-                                ]),
+                                options: listify(Object.keys(EVENT_TYPES)),
                             },
                         },
                         {

@@ -9,6 +9,7 @@ import moment from "moment";
 import {Base64} from 'js-base64';
 import {FaCheck, FaDownload, FaTimes} from "react-icons/fa";
 import * as lodash from "lodash";
+import {EVENT_TYPES} from "../eventInfo/EventInfo";
 
 export default class Confirmation extends React.Component {
 
@@ -30,7 +31,7 @@ export default class Confirmation extends React.Component {
     buildParticipationXML() {
         return new ParticipationSpreadsheet(
             STORAGE_VARS.EVENT_NAME.get(''),
-            STORAGE_VARS.EVENT_TYPE.get(''),
+            EVENT_TYPES[STORAGE_VARS.EVENT_TYPE.get('')].type,
             STORAGE_VARS.LOCATION.get(''),
             STORAGE_VARS.ATTENDANCE.get([]).map((attendee) => `${attendee.id}`.padStart(7, '0')),
             STORAGE_VARS.DATE.get(moment()).format('MM/DD/YYYY'),
