@@ -32,11 +32,12 @@ export default class Confirmation extends React.Component {
         return new ParticipationSpreadsheet(
             STORAGE_VARS.EVENT_NAME.get(''),
             EVENT_TYPES[STORAGE_VARS.EVENT_TYPE.get('')].type,
-            STORAGE_VARS.LOCATION.get(''),
+            STORAGE_VARS.HALL.get(''),
             STORAGE_VARS.ATTENDANCE.get([]).map((attendee) => `${attendee.id}`.padStart(7, '0')),
             STORAGE_VARS.DATE.get(moment()).format('MM/DD/YYYY'),
             STORAGE_VARS.TIME_START.get(moment()).format('hh:mm A'),
             STORAGE_VARS.TIME_END.get(moment()).format('hh:mm A'),
+            STORAGE_VARS.OFF_CAMPUS.get(false),
         ).build();
     }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Input, TextArea} from "semantic-ui-react";
+import {Checkbox, Input, TextArea} from "semantic-ui-react";
 import {DropdownStateful} from "../../components/DropdownStateful";
 import {STORAGE_KEYS, STORAGE_VARS} from "../../StorageVars";
 import {VISUAL_STATES} from "../../States";
@@ -94,11 +94,63 @@ export default class EventInfo extends React.Component {
                             required: true,
                             validator: EventInfo.buildValidatorNonEmpty(),
                             info: {
+                                sessionKey: STORAGE_KEYS.HALL,
+                                component: DropdownStateful,
+                                fieldLabel: 'Your Hall',
+                                popup: 'The hall the event belongs to',
+                                defaultSessionValue: '',
+                                options: listify([
+                                    "158 South Willard",
+                                    "371 Main Street",
+                                    "396 Main Street",
+                                    "Adirondack Hall",
+                                    "Bader Hall",
+                                    "Bankus Hall",
+                                    "Carriage House",
+                                    "Cushing Hall",
+                                    "Hill Hall",
+                                    "Jensen Hall",
+                                    "Lyman Hall",
+                                    "McDonald Hall",
+                                    "North House",
+                                    "Pearl Hall",
+                                    "Rowell Hall",
+                                    "Sanders Hall",
+                                    "Schillhammer Hall",
+                                    "South House",
+                                    "Summit Hall",
+                                    "Whiting Hall",
+                                    "308 Maple",
+                                    "Boardman Hall",
+                                    "Lakeview Hall",
+                                    "Butler Hall",
+                                    "Juniper Hall",
+                                    "Valcour Hall",
+                                    "194 Saint Paul Street",
+                                ].sort()),
+                            },
+                        },
+                        {
+                            required: true,
+                            validator: EventInfo.buildValidatorNonEmpty(),
+                            info: {
                                 sessionKey: STORAGE_KEYS.LOCATION,
                                 component: Input,
-                                fieldLabel: 'Location (Hall)',
-                                popup: 'The hall the event is in (or where the event took place)',
+                                fieldLabel: 'Location',
+                                popup: 'Where the event took place (location in hall, or out-of-hall location)',
                                 defaultSessionValue: '',
+                            },
+                        },
+                        {
+                            required: false,
+                            validator: EventInfo.buildValidatorNonEmpty(),
+                            info: {
+                                sessionKey: STORAGE_KEYS.OFF_CAMPUS,
+                                component: Checkbox,
+                                fieldLabel: 'Location Off Campus?',
+                                popup: 'Is the location off campus?',
+                                defaultSessionValue: false,
+                                toggle: true,
                             },
                         },
                         {

@@ -19,8 +19,15 @@ export let STORAGE_VARS = {
         useSession: true,
         wrapStringify: (value) => value.join(', '),
     },
+    HALL: {
+        useSession: true,
+    },
     LOCATION: {
         useSession: true,
+    },
+    OFF_CAMPUS: {
+        useSession: true,
+        initialValue: false,
     },
     DATE: {
         useSession: true,

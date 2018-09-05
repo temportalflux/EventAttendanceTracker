@@ -37,6 +37,7 @@ border: 1pt solid black;
             <td class="headerCell">End Time</td>
             <td class="headerCell">Residence Hall</td>
             <td class="headerCell">Program Type</td>
+            <td class="headerCell">Off Campus</td>
         </tr>
         $\{CONTENT}
     </tbody>
@@ -46,8 +47,8 @@ border: 1pt solid black;
 
 export default class ParticipationSpreadsheet {
 
-    constructor(evtName, evtType, location, idNumbers, date, timeStart, timeEnd) {
-        this.eventDetails = [evtName, date, timeStart, timeEnd, location, evtType];
+    constructor(evtName, evtType, location, idNumbers, date, timeStart, timeEnd, offCampus) {
+        this.eventDetails = [evtName, date, timeStart, timeEnd, location, evtType, offCampus];
         this.idNumbers = idNumbers;
 
         this.build = this.build.bind(this);
