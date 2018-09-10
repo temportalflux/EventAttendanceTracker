@@ -7,7 +7,7 @@ import GoogleApi from "../../GoogleApi";
 import ParticipationSpreadsheet from "./ParticipationSpreadsheet";
 import moment from "moment";
 import {Base64} from 'js-base64';
-import {FaCheck, FaDownload, FaTimes} from "react-icons/fa";
+import {FaCheck, FaDownload, FaMinus, FaTimes} from "react-icons/fa";
 import * as lodash from "lodash";
 import {EVENT_TYPES} from "../eventInfo/EventInfo";
 
@@ -20,6 +20,7 @@ export default class Confirmation extends React.Component {
         this.handleSendAttendanceEmail = this.handleSendAttendanceEmail.bind(this);
         this.handleSendAttendeeEmail = this.handleSendAttendeeEmail.bind(this);
         this.handleDownloadAttendance = this.handleDownloadAttendance.bind(this);
+        this.handleDeleteRow = this.handleDeleteRow.bind(this);
 
         this.state = {
             sendAttendanceStatus: undefined,
@@ -147,6 +148,13 @@ export default class Confirmation extends React.Component {
         }, str);
     }
 
+    handleDeleteRow(e, {name}) {
+        let attendance = STORAGE_VARS.ATTENDANCE.get([]);
+        attendance.splice(name, 1);
+        STORAGE_VARS.ATTENDANCE.set(attendance);
+        this.setState({refreshKey: shortid.generate()});
+    }
+
     render() {
         return (
             <Base>
@@ -182,6 +190,7 @@ export default class Confirmation extends React.Component {
                                 <Table.HeaderCell>ID</Table.HeaderCell>
                                 <Table.HeaderCell>Email</Table.HeaderCell>
                                 <Table.HeaderCell>Email Sent Status</Table.HeaderCell>
+                                <Table.HeaderCell>Delete Row</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -200,6 +209,9 @@ export default class Confirmation extends React.Component {
                                         <Table.Cell>{attendee.id}</Table.Cell>
                                         <Table.Cell>{attendee.email.user}{attendee.email.host}</Table.Cell>
                                         <Table.Cell>{statusComp}</Table.Cell>
+                                        <Table.Cell>
+                                            <Button name={i} color='red' onClick={this.handleDeleteRow}><FaMinus/></Button>
+                                        </Table.Cell>
                                     </Table.Row>
                                 );
                             })}
