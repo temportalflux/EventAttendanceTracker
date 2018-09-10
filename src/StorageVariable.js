@@ -60,9 +60,10 @@ export default class StorageVariable {
 
     clear(silent) {
         this.getStorage().removeItem(this.key);
-        this.init();
+        if (this.initialValue !== undefined)
+            this.getStorage().setItem(this.key, JSON.stringify(this.initialValue));
         if (!silent)
-            this.dispatch(this.initialValue);
+            this.dispatch(this.get(undefined));
     }
 
     subscribe(handle, handler) {

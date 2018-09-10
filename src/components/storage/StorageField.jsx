@@ -85,7 +85,9 @@ export class StorageField extends React.Component {
 
     handleChangeFieldWrapper(...data) {
         if (this.props.getValueOnChange)
-            this.set(this.props.getValueOnChange(...data));
+            this.handleChangeField(null, {
+                [this.props.valueKey]: this.props.getValueOnChange(...data),
+            });
         else
             this.handleChangeField(...data);
     }
