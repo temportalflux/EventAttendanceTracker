@@ -90,7 +90,8 @@ export class StorageField extends React.Component {
             this.handleChangeField(...data);
     }
 
-    handleChangeField(e, {name, value}) {
+    handleChangeField(e, data) {
+        let value = data[this.props.valueKey];
         if (!this.props.isValid || this.props.isValid(value)) {
             this.set(value);
         }
@@ -128,7 +129,7 @@ export class StorageField extends React.Component {
         let compProps = {
             ...props,
             name: this.getName(),
-            value: this.state.value,
+            [this.props.valueKey]: this.state.value,
             onChange: this.handleChangeFieldWrapper,
             onBlur: this.handleBlur,
         };
@@ -165,6 +166,7 @@ StorageField.defaultProps = {
     getValueOnChange: undefined,
     wrapValue: undefined,
     popup: undefined,
+    valueKey: 'value',
 };
 
 StorageField.propTypes = {
@@ -181,4 +183,5 @@ StorageField.propTypes = {
     getValueOnChange: PropTypes.func,
     wrapValue: PropTypes.func,
     popup: PropTypes.string,
+    valueKey: PropTypes.string,
 };

@@ -151,6 +151,7 @@ export default class EventInfo extends React.Component {
                                 popup: 'Is the location off campus?',
                                 defaultSessionValue: false,
                                 toggle: true,
+                                valueKey: 'checked',
                             },
                         },
                         {
