@@ -58,12 +58,12 @@ export let STORAGE_VARS = {
                 user: '',
                 host: '@champlain.edu',
             },
-            subject: `$\{EVENT_TYPE}: $\{EVENT_NAME} in $\{LOCATION} Participation Record`,
+            subject: `$\{EVENT_TYPE}: $\{EVENT_NAME} in $\{HALL} $\{LOCATION} Participation Record`,
             body:
 `Hi Jared,
 
 Here is the participation spreadsheet for my event.
-It was an $\{EVENT_TYPE} program named $\{EVENT_NAME} in $\{LOCATION} on $\{DATE} from $\{TIME_START} to $\{TIME_END}.
+It was an $\{EVENT_TYPE} program named $\{EVENT_NAME} in $\{HALL} $\{LOCATION} on $\{DATE} from $\{TIME_START} to $\{TIME_END}.
 There were $\{ATTENDANCE|raw|VALUE.length} people in attendance.
 
 Thank you for your time,
@@ -89,11 +89,11 @@ $\{RA}`,
     ATTENDEE_EMAIL: {
         useSession: true,
         initialValue: {
-            subject: `Thank you for attending $\{EVENT_NAME} at $\{LOCATION}`,
+            subject: `Thank you for attending $\{EVENT_NAME} at $\{HALL} $\{LOCATION}`,
             body:
 `Hi $\{ATTENDEE_NAME},
 
-Thank you for coming to $\{EVENT_NAME} at $\{LOCATION} on $\{DATE}!$\{EVENT_TYPE|raw|VALUE==='Educational'?'\\nPlease take a moment to fill out our program evaluation. https://champlaincollege.wufoo.com/forms/educational-student-evaluation/':''}
+Thank you for coming to $\{EVENT_NAME} at $\{HALL} $\{LOCATION} on $\{DATE}!$\{EVENT_TYPE|raw|VALUE.includes('Educational')?'\\nPlease take a moment to fill out our program evaluation. https://champlaincollege.wufoo.com/forms/educational-student-evaluation/':''}
 
 Again, thank you for coming!
 $\{RA}`,
