@@ -29,7 +29,7 @@ export const EVENT_TYPES = {
     "Educational: Life Skills": { type: 'Educational' },
     "Educational: Alcohol, Marijuana, & Other Drugs": { type: 'Educational' },
     "Educational: Other": { type: 'Educational' },
-    'Community Development': { type: 'Community Development' },
+    'Community Builder': { type: 'Community Development' },
     'Engagement': { type: 'Engagement' },
 };
 
@@ -160,7 +160,7 @@ export default class EventInfo extends React.Component {
                             info: {
                                 sessionKey: STORAGE_KEYS.DATE,
                                 component: DateTime,
-                                fieldLabel: 'Date',
+                                fieldLabel: 'Program Date',
                                 popup: 'The date of the event',
                                 defaultSessionValue: moment(),
                                 wrapValue: (serialized) => moment(serialized),
