@@ -282,7 +282,7 @@ export default class EventInfo extends React.Component {
     }
 
     static getErrorsIfContains(value, containsStr) {
-        return value && value.includes(containsStr) ? ['Value contains ${containsStr}'] : [];
+        return value && value.includes(containsStr) ? [`Value contains ${containsStr}`] : [];
     }
 
     static getErrorsForEmailObj(value, required, isBlur) {
