@@ -281,10 +281,15 @@ export default class EventInfo extends React.Component {
         return errors;
     }
 
+    static getErrorsIfContains(value, containsStr) {
+        return value && value.includes(containsStr) ? ['Value contains ${containsStr}'] : [];
+    }
+
     static getErrorsForEmailObj(value, required, isBlur) {
         let errors = [];
         if (required) {
             errors = errors.concat(EventInfo.getErrorsForNonEmpty(value.user, required, isBlur).map((error) => `User: ${error}`));
+            errors = errors.concat(EventInfo.getErrorsIfContains(value.user, '@').map((error) => `User: ${error}`));
             errors = errors.concat(EventInfo.getErrorsForNonEmpty(value.host, required, isBlur).map((error) => `Host: ${error}`));
         }
         return errors;

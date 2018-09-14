@@ -16,7 +16,6 @@ export class Email extends React.Component {
     }
 
     handleChangeUser(e, {name, value}) {
-        if (value.includes('@')) return;
         let fullValue = this.props.value;
         fullValue.user = value;
         this.props.onChange(e, {
