@@ -48,7 +48,7 @@ export default class Confirmation extends React.Component {
         STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
 
         let emailVar = STORAGE_VARS.ATTENDANCE_EMAIL.get({});
-        let receiver = 'dustin.yost@mymail.champlain.edu'; // 'jcadrette@champlain.edu'; // TODO: Make this dynamic via config file
+        let receiver = 'jcadrette@champlain.edu'; // TODO: Make this dynamic via config file
         let emailInfo = [
             receiver, [
                 AREAS[HALLS_TO_AREA[STORAGE_VARS.HALL.get("")]].AC.email,
