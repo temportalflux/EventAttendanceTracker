@@ -54,10 +54,6 @@ export let STORAGE_VARS = {
     ATTENDANCE_EMAIL: {
         useSession: true,
         initialValue: {
-            recipient: {
-                user: '',
-                host: '@champlain.edu',
-            },
             subject: `$\{EVENT_TYPE}: $\{EVENT_NAME} in $\{HALL} $\{LOCATION} Participation Record`,
             body:
 `Hi Jared,

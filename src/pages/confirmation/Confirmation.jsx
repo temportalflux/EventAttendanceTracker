@@ -9,7 +9,7 @@ import moment from "moment";
 import {Base64} from 'js-base64';
 import {FaCheck, FaDownload, FaMinus, FaTimes} from "react-icons/fa";
 import * as lodash from "lodash";
-import {EVENT_TYPES} from "../eventInfo/EventInfo";
+import {AREAS, EVENT_TYPES, HALLS_TO_AREA} from "../eventInfo/EventInfo";
 
 export default class Confirmation extends React.Component {
 
@@ -48,9 +48,12 @@ export default class Confirmation extends React.Component {
         STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
 
         let emailVar = STORAGE_VARS.ATTENDANCE_EMAIL.get({});
-        let receiver = `${emailVar.recipient.user}${emailVar.recipient.host}`;
+        let receiver = 'dustin.yost@mymail.champlain.edu'; // 'jcadrette@champlain.edu'; // TODO: Make this dynamic via config file
         let emailInfo = [
-            receiver, [], [],
+            receiver, [
+                AREAS[HALLS_TO_AREA[STORAGE_VARS.HALL.get("")]].AC.email,
+            ],
+            [],
             Confirmation.compileTextForStorageVars(emailVar.subject),
             Confirmation.compileTextForStorageVars(emailVar.body),
         ];

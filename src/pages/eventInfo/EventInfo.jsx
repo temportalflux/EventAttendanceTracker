@@ -8,9 +8,10 @@ import {listify} from "../../util/ReactUtil";
 import {StorageFieldSection} from "../../components/storage/StorageFieldSection";
 import StorageFieldData from "../../components/storage/StorageFieldData";
 import StorageFieldSectionData from "../../components/storage/StorageFieldSectionData";
-import {Email} from "../../components/Email";
 import moment from 'moment';
 import DateTime from 'react-datetime';
+
+const IS_DEBUG = false;
 
 export const EVENT_TYPES = {
     "Educational: Sexual Violence Awareness": { type: 'Educational' },
@@ -32,6 +33,85 @@ export const EVENT_TYPES = {
     'Community Builder': { type: 'Community Development' },
     'Engagement': { type: 'Engagement' },
 };
+
+export const AREAS = {
+    'NORTH': {
+        AC: {
+            name: "Ian Fournier",
+            email: "ifournier@champlain.edu",
+        },
+    },
+    'EAST': {
+        AC: {
+            name: "Kirby Basile",
+            email: "kbasile@champlain.edu",
+        },
+    },
+    'SOUTH': {
+        AC: {
+            name: "Kevin Duerr",
+            email: "kduerr@champlain.edu",
+        },
+    },
+    'WEST': {
+        AC: {
+            name: "Bridget Grim",
+            email: "bgrim@champlain.edu",
+        },
+    },
+    'CENTRAL': {
+        AC: {
+            name: "Jackie Marcoux",
+            email: "jmarcoux@champlain.edu",
+        },
+    },
+    '194': {
+        AC: {
+            name: "Jen Clarke",
+            email: "jclarke@champlain.edu",
+        },
+    },
+};
+
+export const HALLS_TO_AREA = {
+    "158 South Willard": "CENTRAL",
+    "371 Main Street": "NORTH",
+    "396 Main Street": "NORTH",
+    "Adirondack Hall": "WEST",
+    "Bader Hall": "CENTRAL",
+    "Bankus Hall": "SOUTH",
+    "Carriage House": "EAST",
+    "Cushing Hall": "CENTRAL",
+    "Hill Hall": "EAST",
+    "Jensen Hall": "SOUTH",
+    "Lyman Hall": "EAST",
+    "McDonald Hall": "EAST",
+    "North House": "NORTH",
+    "Pearl Hall": "SOUTH",
+    "Rowell Hall": "SOUTH",
+    "Sanders Hall": "NORTH",
+    "Schillhammer Hall": "EAST",
+    "South House": "SOUTH",
+    "Summit Hall": "NORTH",
+    "Whiting Hall": "EAST",
+    "308 Maple": "WEST",
+    "Boardman Hall": "CENTRAL",
+    "Lakeview Hall": "WEST",
+    "Butler Hall": "WEST",
+    "Juniper Hall": "WEST",
+    "Valcour Hall": "CENTRAL",
+    "194 Saint Paul Street": "194",
+};
+
+if (IS_DEBUG) {
+    AREAS["DEBUG_AREA"] = {
+        AC: {
+            name: "DEBUG PERSON",
+            email: "dustin.yost@mymail.champlain.edu",
+        }
+    };
+    HALLS_TO_AREA["DEBUG_HALL"] = "DEBUG_AREA";
+}
 
 export default class EventInfo extends React.Component {
 
@@ -99,35 +179,7 @@ export default class EventInfo extends React.Component {
                                 fieldLabel: 'Your Hall',
                                 popup: 'The hall the event belongs to',
                                 defaultSessionValue: '',
-                                options: listify([
-                                    "158 South Willard",
-                                    "371 Main Street",
-                                    "396 Main Street",
-                                    "Adirondack Hall",
-                                    "Bader Hall",
-                                    "Bankus Hall",
-                                    "Carriage House",
-                                    "Cushing Hall",
-                                    "Hill Hall",
-                                    "Jensen Hall",
-                                    "Lyman Hall",
-                                    "McDonald Hall",
-                                    "North House",
-                                    "Pearl Hall",
-                                    "Rowell Hall",
-                                    "Sanders Hall",
-                                    "Schillhammer Hall",
-                                    "South House",
-                                    "Summit Hall",
-                                    "Whiting Hall",
-                                    "308 Maple",
-                                    "Boardman Hall",
-                                    "Lakeview Hall",
-                                    "Butler Hall",
-                                    "Juniper Hall",
-                                    "Valcour Hall",
-                                    "194 Saint Paul Street",
-                                ].sort()),
+                                options: listify(Object.keys(HALLS_TO_AREA).sort()),
                             },
                         },
                         {
@@ -205,17 +257,6 @@ export default class EventInfo extends React.Component {
                 {
                     text: 'Attendance Email Info',
                     fields: [
-                        {
-                            required: true,
-                            validator: EventInfo.buildValidator(EventInfo.getErrorsForEmailObj),
-                            info: {
-                                sessionKey: `${STORAGE_KEYS.ATTENDANCE_EMAIL}.recipient`,
-                                component: Email,
-                                fieldLabel: 'Recipient',
-                                popup: 'The email to send the attendance/participation form to',
-                                defaultSessionValue: '',
-                            },
-                        },
                         {
                             required: true,
                             validator: EventInfo.buildValidatorNonEmpty(),

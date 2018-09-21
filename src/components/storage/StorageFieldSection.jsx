@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Header, Segment} from "semantic-ui-react";
+import {Divider, Header, Segment} from "semantic-ui-react";
 import {StorageFieldBuilder} from "./StorageFieldBuilder";
 import * as shortid from "shortid";
 import StorageFieldSectionData from "./StorageFieldSectionData";
@@ -8,11 +8,13 @@ import StorageFieldSectionData from "./StorageFieldSectionData";
 export class StorageFieldSection extends React.Component {
 
     render() {
-        let { title, sectionData, segment, sectionDepth } = this.props;
+        let { text, sectionData, segment, sectionDepth } = this.props;
         if (sectionDepth <= 0) {
+            text = sectionData.props.text;
+            segment = sectionData.props.segment;
             return (
                 <div>
-                    {title && <Header>{title}</Header>}
+                    {text && <Header>{text}</Header>}
                     <Segment {...segment}>
                         {sectionData.props.fields.map((storageFieldData) => (
                             <StorageFieldBuilder
@@ -21,6 +23,7 @@ export class StorageFieldSection extends React.Component {
                             />
                         ))}
                     </Segment>
+                    <Divider hidden />
                 </div>
             );
         }
