@@ -42,6 +42,10 @@ export default class Confirmation extends React.Component {
         ).build();
     }
 
+    static getACEmail() {
+        return AREAS[HALLS_TO_AREA[STORAGE_VARS.HALL.get("")]].AC.email;
+    }
+
     async handleSendAttendanceEmail() {
         STORAGE_VARS.ATTENDEE_NAME.clear(true);
         STORAGE_VARS.ATTENDEE_ID.clear(true);
@@ -50,9 +54,7 @@ export default class Confirmation extends React.Component {
         let emailVar = STORAGE_VARS.ATTENDANCE_EMAIL.get({});
         let receiver = 'jcadrette@champlain.edu'; // TODO: Make this dynamic via config file
         let emailInfo = [
-            receiver, [
-                AREAS[HALLS_TO_AREA[STORAGE_VARS.HALL.get("")]].AC.email,
-            ],
+            receiver, [Confirmation.getACEmail()],
             [],
             Confirmation.compileTextForStorageVars(emailVar.subject),
             Confirmation.compileTextForStorageVars(emailVar.body),
@@ -93,6 +95,11 @@ export default class Confirmation extends React.Component {
         STORAGE_VARS.ATTENDEE_ID.clear(true);
         STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
 
+        let compiledSubject = Confirmation.compileTextForStorageVars(email['subject']);
+        let compiledBody = Confirmation.compileTextForStorageVars(email['body']);
+
+        let attendeeEmails = [];
+
         for (let i = 0; i < attendees.length; i++) {
             {
                 let attendeeStatus = this.state.sendAttendeesStatus;
@@ -100,31 +107,29 @@ export default class Confirmation extends React.Component {
                 this.setState({ sendAttendeesStatus: attendeeStatus });
             }
 
+            attendeeEmails.push(`${attendees[i].email.user}${attendees[i].email.host}`);
+
+            /*
             STORAGE_VARS.ATTENDEE_NAME.set(attendees[i].name, true);
             STORAGE_VARS.ATTENDEE_ID.set(attendees[i].id, true);
             STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.set(attendees[i].email, true);
 
-            let compiledSubject = Confirmation.compileTextForStorageVars(email['subject']);
-            let compiledBody = Confirmation.compileTextForStorageVars(email['body']);
-
             STORAGE_VARS.ATTENDEE_NAME.clear(true);
             STORAGE_VARS.ATTENDEE_ID.clear(true);
             STORAGE_VARS.ATTENDEE_EMAIL_ADDRESS.clear(true);
-
-            ///*
-            let {success} = await GoogleApi.sendEmail(
-                `${attendees[i].email.user}${attendees[i].email.host}`,
-                [], [], compiledSubject, compiledBody,
-            );
             //*/
-            //let success = true;
-
-            {
-                let attendeeStatus = this.state.sendAttendeesStatus;
-                attendeeStatus[i] = success ? 'success' : 'failure';
-                this.setState({ sendAttendeesStatus: attendeeStatus });
-            }
         }
+
+        let {success} = await GoogleApi.sendEmail(
+            undefined, [], attendeeEmails, compiledSubject, compiledBody,
+        );
+
+        for (let i = 0; i < attendees.length; i++) {
+            let attendeeStatus = this.state.sendAttendeesStatus;
+            attendeeStatus[i] = success ? 'success' : 'failure';
+            this.setState({ sendAttendeesStatus: attendeeStatus });
+        }
+
     }
 
     static compileTextForStorageVars(str) {

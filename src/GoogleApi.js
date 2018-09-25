@@ -99,9 +99,10 @@ export default class GoogleApi {
                 [ 'Content-Type', `multipart/mixed; boundary="${boundary}"` ],
                 [ 'MIME-Version', '1.0' ],
                 [ 'From', 'me' ],
-                [ 'To', receivers ],
                 [ 'Subject', subject ],
             ];
+            if (receivers !== undefined)
+                header.push(['To', receivers ]);
             if (cc.length > 0) header.push([ 'Cc', cc ]);
             if (bcc.length > 0) header.push([ 'Bcc', bcc ]);
             email.push(GoogleApi.buildHeader(header));

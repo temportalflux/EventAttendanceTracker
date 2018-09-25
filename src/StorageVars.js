@@ -87,7 +87,7 @@ $\{RA}`,
         initialValue: {
             subject: `Thank you for attending $\{EVENT_NAME} at $\{HALL} $\{LOCATION}`,
             body:
-`Hi $\{ATTENDEE_NAME},
+`Hi folks,
 
 Thank you for coming to $\{EVENT_NAME} at $\{HALL} $\{LOCATION} on $\{DATE}!$\{EVENT_TYPE|raw|VALUE.includes('Educational')?'\\nPlease take a moment to fill out our program evaluation. https://champlaincollege.wufoo.com/forms/educational-student-evaluation/':''}
 
