@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from '../Base';
-import {Button, Divider, Grid, Header, Loader, Segment, Table} from "semantic-ui-react";
+import {Button, Divider, Grid, Header, Loader, Segment, Table, Modal, Form, TextArea, Message} from "semantic-ui-react";
 import {STORAGE_VARS} from "../../StorageVars";
 import * as shortid from "shortid";
 import GoogleApi from "../../GoogleApi";
@@ -21,11 +21,20 @@ export default class Confirmation extends React.Component {
         this.handleSendAttendeeEmail = this.handleSendAttendeeEmail.bind(this);
         this.handleDownloadAttendance = this.handleDownloadAttendance.bind(this);
         this.handleDeleteRow = this.handleDeleteRow.bind(this);
+        this.handleOpenModalImportCSV = this.handleOpenModalImportCSV.bind(this);
+        this.handleCloseModalImportCSV = this.handleCloseModalImportCSV.bind(this);
+        this.handleImportCSV = this.handleImportCSV.bind(this);
+        this.handleChangeCSV = this.handleChangeCSV.bind(this);
 
         this.state = {
             sendAttendanceStatus: undefined,
             sendAttendeesStatus: [],
+            csvModal: {
+                isOpen: false,
+            },
         };
+
+        this.csvContent = '';
 
     }
 
@@ -163,10 +172,59 @@ export default class Confirmation extends React.Component {
         this.setState({refreshKey: shortid.generate()});
     }
 
+    handleOpenModalImportCSV()
+    {
+        this.setState({csvModal: {isOpen: true}});
+    }
+
+    handleCloseModalImportCSV()
+    {
+        this.setState({csvModal: {isOpen: false}});
+    }
+
+    handleImportCSV()
+    {
+        let csvData = this.csvContent;
+        this.handleCloseModalImportCSV();
+        this.csvContent = '';
+
+        csvData = csvData.split('\n').map((row) => {
+            return row.trim().split(',').map((item) => item.trim());
+        });
+
+        let attendance = STORAGE_VARS.ATTENDANCE.get([]);
+        for (const attendee of csvData)
+        {
+            let [name, id, email] = attendee;
+
+            let [user, host] = email.split('@');
+
+            attendance.push({
+                name: name,
+                id: id,
+                email: {
+                    user: user,
+                    host: `@${host}`,
+                },
+            });
+        }
+        STORAGE_VARS.ATTENDANCE.set(attendance);
+
+    }
+
+    handleChangeCSV(e, {value})
+    {
+        this.csvContent = value;
+    }
+
     render() {
         return (
             <Base>
                 <Segment>
+
+                    <Button fluid onClick={this.handleOpenModalImportCSV} color={'orange'}>Import Attendees</Button>
+
+                    <Divider hidden />
 
                     <Grid columns={2}>
                         <Grid.Row>
@@ -191,6 +249,7 @@ export default class Confirmation extends React.Component {
                     <Header>
                         There were {STORAGE_VARS.ATTENDANCE.get([]).length} students in attendance.
                     </Header>
+
                     <Table celled striped>
                         <Table.Header>
                             <Table.Row>
@@ -227,6 +286,41 @@ export default class Confirmation extends React.Component {
                     </Table>
 
                 </Segment>
+
+                <Modal size={'large'} open={this.state.csvModal.isOpen} onClose={this.handleCloseModalImportCSV}>
+                    <Modal.Header>Import Attendees</Modal.Header>
+                    <Modal.Content>
+                        You can paste Comma-Separated Values in the text box below to import a list of attendees.
+                        Example:
+                        <Message>
+                            John Doe, 1234567, john.doe@mymail.champlain.edu
+                            <br/>
+                            Jane Dnow, 1672949, jane.dnow@mymail.champlain.edu
+                        </Message>
+                        <Form>
+                            <Form.Field>
+                                <label>CSV contents</label>
+                                <TextArea
+                                    value={this.state.csvModal.content}
+                                    onChange={this.handleChangeCSV}
+                                />
+                            </Form.Field>
+                        </Form>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button
+                            negative
+                            onClick={this.handleCloseModalImportCSV}
+                        >Cancel</Button>
+                        <Button
+                            positive
+                            icon='checkmark'
+                            labelPosition='right'
+                            content='Import'
+                            onClick={this.handleImportCSV}
+                        />
+                    </Modal.Actions>
+                </Modal>
 
             </Base>
         );
