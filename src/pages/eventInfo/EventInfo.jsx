@@ -68,7 +68,7 @@ export const AREAS = {
     '194': {
         AC: {
             name: "Jen Clarke",
-            email: "jclarke@champlain.edu",
+            email: "jclarke01@champlain.edu",
         },
     },
 };
