@@ -49,8 +49,8 @@ export const AREAS = {
     },
     'SOUTH': {
         AC: {
-            name: "Kevin Duerr",
-            email: "kduerr@champlain.edu",
+            name: "Ian Fournier",
+            email: "ifournier@champlain.edu",
         },
     },
     'WEST': {
@@ -61,8 +61,8 @@ export const AREAS = {
     },
     'CENTRAL': {
         AC: {
-            name: "Jackie Marcoux",
-            email: "jmarcoux@champlain.edu",
+            name: "Ian Fournier",
+            email: "ifournier@champlain.edu",
         },
     },
     '194': {
