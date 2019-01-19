@@ -99,7 +99,7 @@ export default class App extends React.Component {
         }
         
         let resetButton = <div/>;
-        if (this.state.resetEnabled)
+        if ({VISUAL_STATE_DETAILS[this.state.visualState].resetEnabled)
         {
             resetButton = <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>;
         }
