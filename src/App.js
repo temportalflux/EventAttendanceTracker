@@ -97,6 +97,12 @@ export default class App extends React.Component {
                 </div>
             );
         }
+        
+        let resetButton = <div/>;
+        if (this.state.resetEnabled)
+        {
+            resetButton = <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>;
+        }
 
         return (
             <Form>
@@ -104,7 +110,8 @@ export default class App extends React.Component {
                 <Container>
 
                     <Button color={!this.state.demoVisible ? 'yellow' : undefined} floated={'left'} onClick={this.showDemo}>{!this.state.demoVisible ? 'HELP ME!' : 'Hide Demo'}</Button>
-                    <Button color={'red'} floated={'right'} onClick={this.reset}>Reset</Button>
+                    
+                    {resetButton}
 
                     <Header textAlign={'center'}>
                         <Dropdown
