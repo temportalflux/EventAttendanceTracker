@@ -7,6 +7,7 @@ export const VISUAL_STATE_DETAILS = {
     EVENT_INFO: {
         text: 'Event Info',
         render: (props) => <Pages.EventInfo {...props} />,
+        resetEnabled: true,
     },
     ATTENDANCE: {
         text: 'Add Attendee',
@@ -15,6 +16,7 @@ export const VISUAL_STATE_DETAILS = {
     CONFIRMATION: {
         text: 'Export & Send',
         render: (props) => <Pages.Confirmation {...props} />,
+        resetEnabled: true,
     },
 };
 export const VISUAL_STATES = lodash.mapValues(VISUAL_STATE_DETAILS, (value, key) => key);
