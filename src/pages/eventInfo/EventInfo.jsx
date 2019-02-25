@@ -49,8 +49,8 @@ export const AREAS = {
     },
     'SOUTH': {
         AC: {
-            name: "Ian Fournier",
-            email: "ifournier@champlain.edu",
+            name: "Erica Burke",
+            email: "eburke@champlain.edu",
         },
     },
     'WEST': {
