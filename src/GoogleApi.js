@@ -17,8 +17,7 @@ export default class GoogleApi {
         //*/
 
         this.scopes = [
-            'https://www.googleapis.com/auth/gmail.readonly',
-            'https://www.googleapis.com/auth/gmail.compose',
+            'https://www.googleapis.com/auth/gmail.send',
         ];
 
         this.intervalLoadingApi = null;
