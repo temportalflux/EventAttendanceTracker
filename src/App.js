@@ -1,6 +1,6 @@
 import React from 'react';
 import {ClearStorage, LoadStorageVariables, STORAGE_KEYS, STORAGE_VARS} from "./StorageVars";
-import {Button, Container, Divider, Dropdown, Form, Header} from "semantic-ui-react";
+import {Button, Container, Divider, Dropdown, Form, Header, Message} from "semantic-ui-react";
 import {VISUAL_STATE_DETAILS, VISUAL_STATE_LIST, VISUAL_STATES} from "./States";
 import {Redirect, Route} from "react-router-dom";
 import * as lodash from "lodash";
@@ -79,6 +79,8 @@ export default class App extends React.Component {
 
         return (
             <Form>
+            
+                <Message warning>This site will be <b>deactivated September 1st, 2019</b>. Please inquire with Champlain's Department for Residential Life about if this project has a new home and, if so, where that is.</Message>
 
                 <Container>
 
