@@ -78,9 +78,9 @@ export default class App extends React.Component {
         }
 
         return (
-            <Form>
-            
+            <div>
                 <Message warning>This site will be <b>deactivated September 1st, 2019</b>. Please inquire with Champlain's Department for Residential Life about if this project has a new home and, if so, where that is.</Message>
+            <Form>
 
                 <Container>
 
@@ -102,6 +102,7 @@ export default class App extends React.Component {
                 </Container>
 
             </Form>
+            </div>
         );
     }
 
